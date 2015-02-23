@@ -149,7 +149,6 @@ public class Game implements KeyListener {
 			this.lastFpsTime = currentTime;
 		}
 		this.currentTick = System.nanoTime();
-		List<Future<?>> futures = new ArrayList<>();
 		if (this.lastTick > 0) {
 			List<TickListener> toRemove = new ArrayList<>();
 			for (TickListener listener : this.tickListeners) {
