@@ -6,23 +6,16 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
-public class Rock extends BaseEntity implements Explodeable {
+public class Rock extends BaseEntity {
 
 	private Shape shape;
 	private final Color color;
 	private boolean alive = true;
 	private final boolean fill;
-	private final ExplodeCallback callback;
 
-	public static interface ExplodeCallback {
-
-		public void onExplode(Rock rock);
-
-	}
-
-	public Rock(double width, double height, Color color, boolean fill,
-			boolean rect, ExplodeCallback callback) {
-		super(true, width, height);
+	public Rock(boolean canCollide, double width, double height, Color color, boolean fill,
+			boolean rect) {
+		super(canCollide, width, height);
 		if (rect) {
 			this.shape = new Rectangle(0, 0, (int) width, (int) height);
 		} else {
@@ -30,7 +23,6 @@ public class Rock extends BaseEntity implements Explodeable {
 		}
 		this.color = color;
 		this.fill = fill;
-		this.callback = callback;
 	}
 
 	@Override
@@ -40,12 +32,6 @@ public class Rock extends BaseEntity implements Explodeable {
 
 	public boolean isAlive() {
 		return this.alive;
-	}
-
-	@Override
-	public void explode() {
-		this.alive = true;
-		this.callback.onExplode(this);
 	}
 
 	@Override

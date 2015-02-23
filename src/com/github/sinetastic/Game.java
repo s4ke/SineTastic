@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.AudioSystem;
@@ -99,14 +98,14 @@ public class Game implements KeyListener {
 		this.ship = new Ship(SHIP_WIDTH, SHIP_HEIGHT);
 		// center the ship
 		this.ship.setY((HEIGHT / 2) - (SHIP_HEIGHT / 2));
-		this.scene.addEntity(4, this.ship);
+		this.scene.addEntity(3, this.ship);
 
 		{
 			this.topWall = new ProceduralWall(true, WIDTH, 200,
 					(step, position) -> {
 						step[0] = Math.sin(this.random.nextDouble());
 						return null;
-					}, 200, Color.MAGENTA, true);
+					}, 200, this.randomColor(1.0f), true);
 			this.topWall.setY(0);
 			this.topWall.setX(0);
 			this.scene.addEntity(1, this.topWall);
@@ -115,7 +114,7 @@ public class Game implements KeyListener {
 					(step, position) -> {
 						step[0] = Math.sin(this.random.nextDouble());
 						return null;
-					}, 200, Color.PINK, false);
+					}, 200, this.randomColor(1.0f), false);
 			this.botWall.setY(300);
 			this.botWall.setX(0);
 			this.scene.addEntity(1, this.botWall);
@@ -123,11 +122,11 @@ public class Game implements KeyListener {
 			this.tickListeners
 					.add(new BackGroundMoveTick(this.topWall, botWall));
 
-			this.tickListeners.add(new RockTick(500));
+			this.tickListeners.add(new RockTick(5000, 5));
 		}
 
 		this.tickListeners.add(new ShipTick());
-		this.tickListeners.add(new ShotTick());
+		this.tickListeners.add(new UserShotTick());
 	}
 
 	public void shipCrashed() {
@@ -135,6 +134,11 @@ public class Game implements KeyListener {
 			this.ship.explode();
 			this.enqueue.add(new SoundTick(this.shipExplodeSound, 1000));
 		}
+	}
+
+	public Color randomColor(float alpha) {
+		return new Color(this.random.nextFloat(), this.random.nextFloat(),
+				this.random.nextFloat(), alpha);
 	}
 
 	public void tick() {

@@ -14,11 +14,11 @@ import com.github.sinetastic.entities.Explodeable;
 import com.github.sinetastic.entities.Ship;
 import com.github.sinetastic.entities.SineWaveShot;
 
-public class ShotTick implements Game.TickListener {
+public class UserShotTick implements Game.TickListener {
 
 	private static final double SHOT_SPEED = 0.25;
 	private static final double SHOT_WIDTH = 50;
-	private static final double SHOT_HEIGHT = 20;
+	private static final double SHOT_HEIGHT = 14;
 	private static final int SHOT_STEPS = 40;
 
 	private static final int DELAY = 1000 * 1000 * 300;
@@ -45,7 +45,7 @@ public class ShotTick implements Game.TickListener {
 							shotArea.transform(AffineTransform
 									.getTranslateInstance(shot.getX(),
 											shot.getY()));
-							ShotTick.this.checkForCollision(game, shot,
+							UserShotTick.this.checkForCollision(game, shot,
 									shotArea, game.scene.getChildrenEntities());
 						}
 						// move the shot
@@ -57,7 +57,7 @@ public class ShotTick implements Game.TickListener {
 										.contains(shot.getX(), shot.getY())) {
 									shot.setVisible(false);
 									game.scene.removeEntity(2, shot);
-									--ShotTick.this.shotCount;
+									--UserShotTick.this.shotCount;
 									this.finished = true;
 								}
 							} else {
@@ -121,7 +121,7 @@ public class ShotTick implements Game.TickListener {
 						otherArea.transform(AffineTransform
 								.getTranslateInstance(entity.getX(),
 										entity.getY()));
-						// this destroys the area so don't use the shipArea
+						// this destroys the area so don't use the shotArea
 						// we need this again for the other checks
 						otherArea.intersect(shotArea);
 						if (!otherArea.isEmpty()) {
@@ -129,7 +129,7 @@ public class ShotTick implements Game.TickListener {
 								toRemove.add(entity);
 							}
 							toRemove.add(shot);
-							--ShotTick.this.shotCount;
+							--UserShotTick.this.shotCount;
 							break;
 						}
 					}

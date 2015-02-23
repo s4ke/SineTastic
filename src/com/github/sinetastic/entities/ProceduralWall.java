@@ -18,7 +18,7 @@ public class ProceduralWall extends BaseEntity {
 	private final double dX;
 	private final Polygon functionPolygon;
 	private final Polygon boxPolygon;
-	private final Color color;
+	private Color color;
 
 	public ProceduralWall(boolean canCollide, double width, double height,
 			BiFunction<double[], double[], Void> function, int steps,
@@ -86,12 +86,20 @@ public class ProceduralWall extends BaseEntity {
 			int newIndex = this.steps + this.totalInc;
 			Point2D newPoint = this.calcPoint(newIndex);
 			int bla = this.steps;
-			if(this.top) {
+			if (this.top) {
 				bla += 1;
 			}
 			this.functionPolygon.ypoints[this.steps] = (int) newPoint.getY();
 			this.boxPolygon.ypoints[bla] = (int) newPoint.getY();
 		}
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
 	}
 
 	@Override
