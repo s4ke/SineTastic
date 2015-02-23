@@ -29,7 +29,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.fsmpi.drunkserver.DrunkServer</mainClass>
+							<mainClass>com.github.sinetastic.Engine</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>

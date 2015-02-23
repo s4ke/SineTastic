@@ -3,6 +3,7 @@ package com.github.sinetastic;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -65,14 +66,22 @@ public class Game implements KeyListener {
 	public Game(ScaleScene scene) throws MidiUnavailableException,
 			LineUnavailableException, IOException,
 			UnsupportedAudioFileException {
-		this.shipShotSound = AudioSystem.getClip();
-		this.shipShotSound
-				.open(AudioSystem.getAudioInputStream(Game.class
-						.getResourceAsStream("/com/github/sinetastic/assets/blazer.wav")));
-		this.shipExplodeSound = AudioSystem.getClip();
-		this.shipExplodeSound
-				.open(AudioSystem.getAudioInputStream(Game.class
-						.getResourceAsStream("/com/github/sinetastic/assets/ship_explode.wav")));
+
+		{
+			this.shipShotSound = AudioSystem.getClip();
+			BufferedInputStream bis = new BufferedInputStream(
+					Game.class
+							.getResourceAsStream("/com/github/sinetastic/assets/blazer.wav"));
+			this.shipShotSound.open(AudioSystem.getAudioInputStream(bis));
+		}
+
+		{
+			this.shipExplodeSound = AudioSystem.getClip();
+			BufferedInputStream bis = new BufferedInputStream(
+					Game.class
+							.getResourceAsStream("/com/github/sinetastic/assets/ship_explode.wav"));
+			this.shipExplodeSound.open(AudioSystem.getAudioInputStream(bis));
+		}
 		this.scene = scene;
 		this.random = new Random();
 		this.enqueue = new ArrayList<>();
