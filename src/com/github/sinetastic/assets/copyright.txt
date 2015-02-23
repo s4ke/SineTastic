@@ -1,0 +1,5 @@
+blazer.wav from:
+http://freesound.org/people/aust_paul/sounds/30935/
+
+ship_explode.wav from:
+http://freesound.org/people/roper1911/sounds/155790/
