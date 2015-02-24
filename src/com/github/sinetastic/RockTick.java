@@ -1,7 +1,5 @@
 package com.github.sinetastic;
 
-import java.awt.Color;
-
 import com.github.sinetastic.Game.TickListener;
 import com.github.sinetastic.entities.Rock;
 

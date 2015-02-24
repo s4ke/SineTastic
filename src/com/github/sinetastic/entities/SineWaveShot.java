@@ -6,20 +6,26 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.util.function.BiFunction;
 
-public class SineWaveShot extends BaseEntity {
+import com.github.sinetastic.Game;
 
+public class SineWaveShot extends BaseEntity implements MoveableEntity, Shot {
+
+	private static final double SHOT_SPEED = 0.25;
 	private Polygon polygon;
 	private final double[] tmp;
 	private final double[] tmp2;
 	private final int steps;
 	private Color color = Color.RED;
+	private final ShotCallback shotCallback;
 
 	public SineWaveShot(boolean canCollide, double width, double height,
-			BiFunction<double[], double[], Void> fx, int steps) {
+			BiFunction<double[], double[], Void> fx, int steps,
+			ShotCallback shotCallback) {
 		super(canCollide, width, height);
 		this.tmp = new double[1];
 		this.tmp2 = new double[1];
 		this.polygon = new Polygon();
+		this.shotCallback = shotCallback;
 		this.steps = steps;
 		double dX = width / this.steps;
 		for (int i = 0; i < this.steps; ++i) {
@@ -27,8 +33,7 @@ public class SineWaveShot extends BaseEntity {
 			this.tmp2[0] = dX * i;
 			fx.apply(this.tmp, this.tmp2);
 			double val = this.tmp[0] * height / 2;
-			this.polygon.addPoint((int) (dX * i),
-					(int) (height / 2 - val));
+			this.polygon.addPoint((int) (dX * i), (int) (height / 2 - val));
 		}
 	}
 
@@ -55,4 +60,50 @@ public class SineWaveShot extends BaseEntity {
 				this.polygon.npoints);
 	}
 
+	@Override
+	public double getSpeedX() {
+		return SHOT_SPEED;
+	}
+
+	@Override
+	public double getSpeedY() {
+		return 0;
+	}
+
+	@Override
+	public void moved(Game game) {
+		double newX = this.getX();
+		double newY = this.getY();
+		boolean leftScreen = false;
+		if (newX < 0) {
+			leftScreen = true;
+		}
+		if (newX >= Game.WIDTH) {
+			leftScreen = true;
+		}
+		if (newY < 0) {
+			leftScreen = true;
+		}
+		if (newY >= Game.HEIGHT) {
+			leftScreen = true;
+		}
+		if (leftScreen) {
+			this.destroy(game);
+		}
+	}
+
+	@Override
+	public void hit(Game game, Object source, double damage) {
+		this.destroy(game);
+	}
+
+	@Override
+	public void destroy(Game game) {
+		this.setVisible(false);
+		game.scene.removeEntity(2, this);
+		game.userShotTick.removeShot(this);
+		game.moveTick.remove(this);
+		this.shotCallback.removeShot(this);
+	}
+	
 }

@@ -19,6 +19,7 @@ public class ProceduralWall extends BaseEntity {
 	private final Polygon functionPolygon;
 	private final Polygon boxPolygon;
 	private Color color;
+	private int totalInc = 0;
 
 	public ProceduralWall(boolean canCollide, double width, double height,
 			BiFunction<double[], double[], Void> function, int steps,
@@ -69,8 +70,6 @@ public class ProceduralWall extends BaseEntity {
 				(int) (this.getHeight() - val));
 	}
 
-	private int totalInc = 0;
-
 	public void shift(int stepIncrement) {
 		this.totalInc += stepIncrement;
 		for (int j = 0; j < stepIncrement; ++j) {
@@ -110,8 +109,7 @@ public class ProceduralWall extends BaseEntity {
 	@Override
 	public void paintSub(Graphics2D g2d) {
 		g2d.setColor(this.color);
-		g2d.fillPolygon(this.boxPolygon.xpoints, this.boxPolygon.ypoints,
-				this.boxPolygon.npoints);
+		g2d.fillPolygon(this.boxPolygon);
 	}
 
 }

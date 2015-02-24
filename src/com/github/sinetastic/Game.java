@@ -53,6 +53,10 @@ public class Game implements KeyListener {
 	private final Set<TickListener> tickListeners;
 	public final Random random;
 	public final List<TickListener> enqueue;
+	public UserShotTick userShotTick;
+	
+	//This is special!
+	public MoveTick moveTick;
 
 	public static interface TickListener {
 
@@ -122,11 +126,13 @@ public class Game implements KeyListener {
 			this.tickListeners
 					.add(new BackGroundMoveTick(this.topWall, botWall));
 
-			this.tickListeners.add(new RockTick(5000, 5));
+//			this.tickListeners.add(new RockTick(5000, 5));
 		}
 
 		this.tickListeners.add(new ShipTick());
-		this.tickListeners.add(new UserShotTick());
+		this.tickListeners.add(this.userShotTick = new UserShotTick());
+		
+		this.moveTick = new MoveTick();
 	}
 
 	public void shipCrashed() {
@@ -154,6 +160,9 @@ public class Game implements KeyListener {
 		}
 		this.currentTick = System.nanoTime();
 		if (this.lastTick > 0) {
+			//first move everything
+			this.moveTick.tick(this);
+			
 			List<TickListener> toRemove = new ArrayList<>();
 			for (TickListener listener : this.tickListeners) {
 				listener.tick(this);
@@ -161,16 +170,16 @@ public class Game implements KeyListener {
 					toRemove.add(listener);
 				}
 			}
-			// prevents the concurrent modification exception
-			int size = this.enqueue.size();
-			for (int i = 0; i < size; ++i) {
-				final TickListener listener = this.enqueue.get(i);
-				listener.tick(Game.this);
-				if (!listener.isFinished()) {
-					this.tickListeners.add(listener);
+			{
+				TickListener listener = null;
+				while (this.enqueue.size() > 0
+						&& (listener = this.enqueue.remove(0)) != null) {
+					listener.tick(Game.this);
+					if (!listener.isFinished()) {
+						this.tickListeners.add(listener);
+					}
 				}
 			}
-			this.enqueue.clear();
 			for (TickListener rem : toRemove) {
 				this.tickListeners.remove(rem);
 			}

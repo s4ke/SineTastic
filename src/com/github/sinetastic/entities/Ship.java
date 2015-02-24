@@ -6,7 +6,9 @@ import java.awt.Polygon;
 import java.awt.Shape;
 import java.util.Random;
 
-public class Ship extends BaseEntity {
+import com.github.sinetastic.Game;
+
+public class Ship extends BaseEntity implements Destructible {
 
 	private static final Random random = new Random();
 
@@ -47,6 +49,16 @@ public class Ship extends BaseEntity {
 	@Override
 	public Shape getCollisionShape() {
 		return this.polygon;
+	}
+
+	@Override
+	public void hit(Game game, Object source, double damage) {
+		
+	}
+
+	@Override
+	public void destroy(Game game) {
+		
 	}
 
 }
