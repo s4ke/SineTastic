@@ -101,7 +101,7 @@ public class Game implements KeyListener {
 		this.scene.addEntity(3, this.ship);
 
 		{
-			this.topWall = new ProceduralWall(true, WIDTH, 200,
+			this.topWall = new ProceduralWall(true, WIDTH, 100,
 					(step, position) -> {
 						step[0] = Math.sin(this.random.nextDouble());
 						return null;
@@ -110,7 +110,7 @@ public class Game implements KeyListener {
 			this.topWall.setX(0);
 			this.scene.addEntity(1, this.topWall);
 
-			this.botWall = new ProceduralWall(true, WIDTH, 200,
+			this.botWall = new ProceduralWall(true, WIDTH, 100,
 					(step, position) -> {
 						step[0] = Math.sin(this.random.nextDouble());
 						return null;

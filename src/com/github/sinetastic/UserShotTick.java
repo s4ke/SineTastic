@@ -19,7 +19,7 @@ public class UserShotTick implements Game.TickListener {
 	private static final double SHOT_SPEED = 0.25;
 	private static final double SHOT_WIDTH = 50;
 	private static final double SHOT_HEIGHT = 14;
-	private static final int SHOT_STEPS = 40;
+	private static final int SHOT_STEPS = 42;
 
 	private static final int DELAY = 1000 * 1000 * 300;
 

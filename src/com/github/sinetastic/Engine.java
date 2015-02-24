@@ -1,6 +1,8 @@
 package com.github.sinetastic;
 
 import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.io.IOException;
 
 import javax.sound.midi.MidiUnavailableException;
@@ -22,14 +24,39 @@ public class Engine {
 	public Engine() throws MidiUnavailableException, LineUnavailableException,
 			IOException, UnsupportedAudioFileException {
 		this.frame = new JFrame();
-		this.frame.setResizable(false);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
 
 		this.scene = new ScaleScene(6);
-		this.scene.setPreferredSize(new Dimension(600, 400));
-		this.frame.setName("Sinetastic!");
+		this.frame.setName("SineTastic!");
+		this.frame.setTitle("SineTastic!");
 		this.frame.getContentPane().add(this.scene);
+		this.scene.setPreferredSize(new Dimension((int) Game.WIDTH, (int) Game.HEIGHT));
+		this.scene.addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+
+			}
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				double newWidth = Engine.this.scene.getWidth();
+				double newHeight = Engine.this.scene.getHeight();
+				Engine.this.scene.setScaleX(newWidth / Game.WIDTH);
+				Engine.this.scene.setScaleY(newHeight / Game.HEIGHT);
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+
+			}
+		});
 
 		this.game = new Game(this.scene);
 		this.game.setup();

@@ -16,7 +16,8 @@ public class ScaleScene extends JPanel {
 	private final ReentrantLock lock = new ReentrantLock();
 
 	private static final long serialVersionUID = -6316148973815286571L;
-	private double scale = 1.0d;
+	private double scaleX = 1.0;
+	private double scaleY = 1.0;
 
 	private Set<Entity>[] entities;
 	private Set<Entity> allEntities;
@@ -31,12 +32,20 @@ public class ScaleScene extends JPanel {
 		this.allEntities = new HashSet<>();
 	}
 
-	public double getScale() {
-		return scale;
+	public double getScaleX() {
+		return scaleX;
 	}
 
-	public void setScale(double scale) {
-		this.scale = scale;
+	public void setScaleX(double scaleX) {
+		this.scaleX = scaleX;
+	}
+
+	public double getScaleY() {
+		return scaleY;
+	}
+
+	public void setScaleY(double scaleY) {
+		this.scaleY = scaleY;
 	}
 
 	public void addEntity(int z, Entity entity) {
@@ -66,7 +75,7 @@ public class ScaleScene extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.scale(this.scale, this.scale);
+		g2d.scale(this.scaleX, this.scaleY);
 		super.paintComponent(g);
 		this.lock.lock();
 		try {

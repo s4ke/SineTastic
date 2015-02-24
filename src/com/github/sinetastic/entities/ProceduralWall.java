@@ -64,9 +64,9 @@ public class ProceduralWall extends BaseEntity {
 		this.tmp[0] = index;
 		this.tmp2[0] = this.dX * index;
 		this.function.apply(this.tmp, this.tmp2);
-		double val = this.tmp[0] * this.getHeight() / 2;
+		double val = this.tmp[0] * this.getHeight();
 		return new Point((int) (this.dX * index),
-				(int) (this.getHeight() / 2 - val));
+				(int) (this.getHeight() - val));
 	}
 
 	private int totalInc = 0;
