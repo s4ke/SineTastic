@@ -10,7 +10,7 @@ public class RockTick implements Game.TickListener {
 	private static final double MAX_SPEED_X = 0.4;
 	private static final double MAX_SPEED_Y = 0.1;
 
-	private static final float ALPHA = 0.1f;
+	private static final float ALPHA = 0.05f;
 
 	private static final int MIN_WIDTH = 10;
 	private static final int MIN_HEIGHT = 10;
