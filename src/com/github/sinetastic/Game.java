@@ -105,28 +105,28 @@ public class Game implements KeyListener {
 		this.scene.addEntity(3, this.ship);
 
 		{
-			this.topWall = new ProceduralWall(true, WIDTH, 100,
-					(step, position) -> {
-						step[0] = Math.sin(this.random.nextDouble());
-						return null;
-					}, 200, this.randomColor(1.0f), true);
-			this.topWall.setY(0);
-			this.topWall.setX(0);
-			this.scene.addEntity(1, this.topWall);
+//			this.topWall = new ProceduralWall(true, WIDTH, 100,
+//					(step, position) -> {
+//						step[0] = Math.sin(this.random.nextDouble());
+//						return null;
+//					}, 200, this.randomColor(1.0f), true);
+//			this.topWall.setY(0);
+//			this.topWall.setX(0);
+//			this.scene.addEntity(1, this.topWall);
+//
+//			this.botWall = new ProceduralWall(true, WIDTH, 100,
+//					(step, position) -> {
+//						step[0] = Math.sin(this.random.nextDouble());
+//						return null;
+//					}, 200, this.randomColor(1.0f), false);
+//			this.botWall.setY(300);
+//			this.botWall.setX(0);
+//			this.scene.addEntity(1, this.botWall);
+//
+//			this.tickListeners
+//					.add(new BackGroundMoveTick(this.topWall, botWall));
 
-			this.botWall = new ProceduralWall(true, WIDTH, 100,
-					(step, position) -> {
-						step[0] = Math.sin(this.random.nextDouble());
-						return null;
-					}, 200, this.randomColor(1.0f), false);
-			this.botWall.setY(300);
-			this.botWall.setX(0);
-			this.scene.addEntity(1, this.botWall);
-
-			this.tickListeners
-					.add(new BackGroundMoveTick(this.topWall, botWall));
-
-//			this.tickListeners.add(new RockTick(5000, 5));
+			this.tickListeners.add(new RockTick(15, 200));
 		}
 
 		this.tickListeners.add(new ShipTick());

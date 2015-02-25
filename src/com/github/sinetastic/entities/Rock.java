@@ -1,5 +1,6 @@
 package com.github.sinetastic.entities;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -38,6 +39,7 @@ public class Rock extends BaseEntity {
 	public void paintSub(Graphics2D g2d) {
 		g2d.setColor(this.color);
 		if (this.fill) {
+			g2d.setStroke(new BasicStroke(5f));
 			g2d.fill(this.shape);
 		} else {
 			g2d.draw(this.shape);

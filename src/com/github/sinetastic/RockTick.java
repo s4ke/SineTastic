@@ -8,7 +8,7 @@ public class RockTick implements Game.TickListener {
 	private static final double MAX_SPEED_X = 0.4;
 	private static final double MAX_SPEED_Y = 0.1;
 
-	private static final float ALPHA = 0.05f;
+	private static final float ALPHA = 1.0f;
 
 	private static final int MIN_WIDTH = 10;
 	private static final int MIN_HEIGHT = 10;
@@ -45,10 +45,11 @@ public class RockTick implements Game.TickListener {
 							if (rock.isVisible()) {
 								double dX = -game.tdT(game.random.nextDouble()
 										* MAX_SPEED_X);
-								double dY = (-1)
-										* game.random.nextInt(2)
-										* game.tdT(game.random.nextDouble()
+								double dY = game.tdT(game.random.nextDouble()
 												* MAX_SPEED_Y);
+								if(game.random.nextBoolean()) {
+									dY *= -1;
+								}
 								rock.setX(rock.getX() + dX);
 								rock.setY(rock.getY() + dY);
 								if (!game.background.getCollisionShape()
@@ -74,9 +75,9 @@ public class RockTick implements Game.TickListener {
 	}
 
 	private Rock createRock(Game game) {
-		Rock rock = new Rock(false, game.random.nextInt(VAR_WIDTH) + MIN_WIDTH,
+		Rock rock = new Rock(true, game.random.nextInt(VAR_WIDTH) + MIN_WIDTH,
 				game.random.nextInt(VAR_HEIGHT) + MIN_HEIGHT,
-				game.randomColor(ALPHA), game.random.nextBoolean(),
+				game.randomColor(ALPHA), true,
 				game.random.nextBoolean());
 		rock.setY(game.random.nextInt((int) Game.HEIGHT));
 		rock.setX((int) Game.WIDTH);
