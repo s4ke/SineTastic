@@ -40,13 +40,14 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 						game.scene.getChildrenEntities());
 			}
 		}
-		for(Shot shot : this.removeShots) {
+		for (Shot shot : this.removeShots) {
 			shot.destroy(game);
 		}
 		// trigger a new shot
 		{
 			boolean allowedToShoot = game.ship.isAlive()
-					&& ((game.currentTick - this.lastShot) > MAX_DELAY) || (this.shots.size() == 0 && ((game.currentTick - this.lastShot) > MIN_DELAY));
+					&& (((game.currentTick - this.lastShot) > MAX_DELAY) || (this.shots
+							.size() == 0 && ((game.currentTick - this.lastShot) > MIN_DELAY)));
 			if (game.shotButton && allowedToShoot) {
 				final SineWaveShot shot = this.createShipShot(game);
 				game.enqueue.add(new SoundTick(game.shipShotSound, 500));
