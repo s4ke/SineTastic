@@ -1,11 +1,18 @@
 package com.github.sinetastic.entities;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Paint;
 import java.awt.Shape;
 
 public class Text extends BaseEntity {
 
+	private static final Font FONT;
+	static {
+		FONT = new Font(Font.SERIF, Font.PLAIN, 12);
+	}
 	private String text;
 	private final Color color;
 
@@ -30,6 +37,7 @@ public class Text extends BaseEntity {
 	@Override
 	public void paintSub(Graphics2D g2d) {
 		g2d.setColor(this.color);
+		g2d.setFont(FONT);
 		g2d.drawString(this.text, 0, 0);
 	}
 

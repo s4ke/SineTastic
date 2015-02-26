@@ -8,17 +8,18 @@ import java.util.function.BiFunction;
 
 import com.github.sinetastic.Game;
 
-public class SineWaveShot extends BaseEntity implements MoveableEntity, Shot {
+public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 
-	private static final double SHOT_SPEED = 0.25;
 	private Polygon polygon;
 	private final double[] tmp;
 	private final double[] tmp2;
 	private final int steps;
 	private Color color = Color.RED;
 	private final ShotCallback shotCallback;
+	private double speedX;
+	private double speedY;
 
-	public SineWaveShot(boolean canCollide, double width, double height,
+	public FxShot(boolean canCollide, double width, double height,
 			BiFunction<double[], double[], Void> fx, int steps,
 			ShotCallback shotCallback) {
 		super(canCollide, width, height);
@@ -35,13 +36,15 @@ public class SineWaveShot extends BaseEntity implements MoveableEntity, Shot {
 			double val = this.tmp[0] * height / 2;
 			this.polygon.addPoint((int) (dX * i), (int) (height / 2 - val));
 		}
+		// make this an area!
+		for (int i = 0; i < this.steps; ++i) {
+			this.polygon.addPoint(this.polygon.xpoints[i] + 1,
+					this.polygon.ypoints[i] + 1);
+		}
 	}
 
 	@Override
 	public Shape getCollisionShape() {
-		if (!this.canCollide()) {
-			throw new IllegalStateException();
-		}
 		return this.polygon;
 	}
 
@@ -60,14 +63,22 @@ public class SineWaveShot extends BaseEntity implements MoveableEntity, Shot {
 				this.polygon.npoints);
 	}
 
+	public void setSpeedX(double speedX) {
+		this.speedX = speedX;
+	}
+
+	public void setSpeedY(double speedY) {
+		this.speedY = speedY;
+	}
+
 	@Override
 	public double getSpeedX() {
-		return SHOT_SPEED;
+		return this.speedX;
 	}
 
 	@Override
 	public double getSpeedY() {
-		return 0;
+		return this.speedY;
 	}
 
 	@Override
@@ -101,9 +112,10 @@ public class SineWaveShot extends BaseEntity implements MoveableEntity, Shot {
 	public void destroy(Game game) {
 		this.setVisible(false);
 		game.scene.removeEntity(2, this);
-		game.userShotTick.removeShot(this);
 		game.moveTick.remove(this);
-		this.shotCallback.removeShot(this);
+		if (this.shotCallback != null) {
+			this.shotCallback.removeShot(this);
+		}
 	}
-	
+
 }

@@ -28,7 +28,7 @@ public class RockTick implements Game.TickListener {
 
 	@Override
 	public void tick(Game game) {
-		// trigger a new shot
+		// spawn a new rock
 		{
 			boolean spawnNew = game.diff(this.lastSpawn) > this.delay
 					&& this.aliveCount < this.maxRocks;

@@ -13,10 +13,11 @@ import com.github.sinetastic.entities.Entity;
 import com.github.sinetastic.entities.Destructible;
 import com.github.sinetastic.entities.Ship;
 import com.github.sinetastic.entities.Shot;
-import com.github.sinetastic.entities.SineWaveShot;
+import com.github.sinetastic.entities.FxShot;
 
 public class UserShotTick implements Game.TickListener, ShotTick {
 
+	private static final double SHOT_SPEED = 0.25;
 	private static final double SHOT_WIDTH = 50;
 	private static final double SHOT_HEIGHT = 14;
 	private static final int SHOT_STEPS = 42;
@@ -49,7 +50,7 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 					&& (((game.currentTick - this.lastShot) > MAX_DELAY) || (this.shots
 							.size() == 0 && ((game.currentTick - this.lastShot) > MIN_DELAY)));
 			if (game.shotButton && allowedToShoot) {
-				final SineWaveShot shot = this.createShipShot(game);
+				final FxShot shot = this.createShipShot(game);
 				game.enqueue.add(new SoundTick(game.shipShotSound, 500));
 				game.moveTick.enqueue.add(shot);
 				this.lastShot = game.currentTick;
@@ -64,16 +65,17 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 
 	@Override
 	public void removeShot(Shot shot) {
-		this.shots.remove((SineWaveShot) shot);
+		this.shots.remove((FxShot) shot);
 	}
 
-	private SineWaveShot createShipShot(Game game) {
-		SineWaveShot ret = new SineWaveShot(true, SHOT_WIDTH, SHOT_HEIGHT, (x,
+	private FxShot createShipShot(Game game) {
+		FxShot ret = new FxShot(false, SHOT_WIDTH, SHOT_HEIGHT, (x,
 				position) -> {
 			x[0] = Math.sin(x[0]);
 			return null;
 		}, SHOT_STEPS, this);
 		ret.setColor(SHOT_COLOR);
+		ret.setSpeedX(SHOT_SPEED);
 		ret.setX(game.ship.getX() + game.ship.getWidth());
 		ret.setY(game.ship.getY());
 		ret.setVisible(true);
@@ -92,7 +94,7 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 		for (Entity entity : entities) {
 			// only background and we are safe!
 			if (entity != shot && entity != game.background
-					&& !(entity instanceof SineWaveShot)
+					&& !(entity instanceof FxShot)
 					&& !(entity instanceof Ship)) {
 				if (entity.canCollide()) {
 					Rectangle otherRect = new Rectangle(

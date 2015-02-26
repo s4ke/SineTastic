@@ -6,9 +6,8 @@ import java.awt.geom.Area;
 
 import com.github.sinetastic.entities.Entity;
 import com.github.sinetastic.entities.Ship;
-import com.github.sinetastic.entities.SineWaveShot;
 
-public class ShipTick implements Game.TickListener {
+public class UserShipTick implements Game.TickListener {
 
 	private static final double SHIP_SPEED_X = 0.1;
 	private static final double SHIP_SPEED_Y = 0.1;
@@ -42,6 +41,10 @@ public class ShipTick implements Game.TickListener {
 				this.checkForCollision(game, ship, shipArea,
 						game.scene.getChildrenEntities());
 			}
+		} else {
+			if(game.reviveButton) {
+				game.respawnShip();
+			}
 		}
 	}
 
@@ -53,8 +56,7 @@ public class ShipTick implements Game.TickListener {
 		// check for collisions
 		for (Entity entity : entities) {
 			// only background and we are safe!
-			if (entity != ship && entity != game.background
-					&& !(entity instanceof SineWaveShot)) {
+			if (entity != ship && entity != game.background) {
 				if (entity.canCollide()) {
 					Rectangle otherRect = new Rectangle(
 							(int) entity.getWidth(), (int) entity.getHeight());

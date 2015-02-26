@@ -1,6 +1,7 @@
 package com.github.sinetastic;
 
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedInputStream;
@@ -29,6 +30,9 @@ public class Game implements KeyListener {
 	public static final double WIDTH = 600;
 	public static final double HEIGHT = 400;
 
+	private static final Rectangle SCENE_BOX = new Rectangle(0, 0, (int) WIDTH,
+			(int) HEIGHT);
+
 	private static final double SHIP_WIDTH = 25;
 	private static final double SHIP_HEIGHT = 18;
 
@@ -37,6 +41,7 @@ public class Game implements KeyListener {
 	public boolean left;
 	public boolean right;
 	public boolean shotButton;
+	public boolean reviveButton;
 
 	public final Clip shipShotSound;
 	public final Clip shipExplodeSound;
@@ -54,8 +59,8 @@ public class Game implements KeyListener {
 	public final Random random;
 	public final List<TickListener> enqueue;
 	public UserShotTick userShotTick;
-	
-	//This is special!
+
+	// This is special!
 	public MoveTick moveTick;
 
 	public static interface TickListener {
@@ -95,43 +100,43 @@ public class Game implements KeyListener {
 		this.background = new Background(WIDTH, HEIGHT);
 		this.scene.addEntity(5, this.background);
 
-		Text text = new Text(200, 200, Color.WHITE);
+		Text text = new Text(200, 200, Color.BLACK);
 		text.setText("Kills: ");
 		this.scene.addEntity(0, text);
 
 		this.ship = new Ship(SHIP_WIDTH, SHIP_HEIGHT);
-		// center the ship
-		this.ship.setY((HEIGHT / 2) - (SHIP_HEIGHT / 2));
-		this.scene.addEntity(3, this.ship);
+		this.respawnShip();
+
+		this.tickListeners.add(new IntegralSignEnemyTick(10, 10));
 
 		{
-//			this.topWall = new ProceduralWall(true, WIDTH, 100,
-//					(step, position) -> {
-//						step[0] = Math.sin(this.random.nextDouble());
-//						return null;
-//					}, 200, this.randomColor(1.0f), true);
-//			this.topWall.setY(0);
-//			this.topWall.setX(0);
-//			this.scene.addEntity(1, this.topWall);
-//
-//			this.botWall = new ProceduralWall(true, WIDTH, 100,
-//					(step, position) -> {
-//						step[0] = Math.sin(this.random.nextDouble());
-//						return null;
-//					}, 200, this.randomColor(1.0f), false);
-//			this.botWall.setY(300);
-//			this.botWall.setX(0);
-//			this.scene.addEntity(1, this.botWall);
-//
-//			this.tickListeners
-//					.add(new BackGroundMoveTick(this.topWall, botWall));
+			// this.topWall = new ProceduralWall(true, WIDTH, 100,
+			// (step, position) -> {
+			// step[0] = Math.sin(this.random.nextDouble());
+			// return null;
+			// }, 200, this.randomColor(1.0f), true);
+			// this.topWall.setY(0);
+			// this.topWall.setX(0);
+			// this.scene.addEntity(1, this.topWall);
+			//
+			// this.botWall = new ProceduralWall(true, WIDTH, 100,
+			// (step, position) -> {
+			// step[0] = Math.sin(this.random.nextDouble());
+			// return null;
+			// }, 200, this.randomColor(1.0f), false);
+			// this.botWall.setY(300);
+			// this.botWall.setX(0);
+			// this.scene.addEntity(1, this.botWall);
+			//
+			// this.tickListeners
+			// .add(new BackGroundMoveTick(this.topWall, botWall));
 
-			this.tickListeners.add(new RockTick(15, 200));
+			// this.tickListeners.add(new RockTick(15, 200));
 		}
 
-		this.tickListeners.add(new ShipTick());
+		this.tickListeners.add(new UserShipTick());
 		this.tickListeners.add(this.userShotTick = new UserShotTick());
-		
+
 		this.moveTick = new MoveTick();
 	}
 
@@ -140,6 +145,13 @@ public class Game implements KeyListener {
 			this.ship.explode();
 			this.enqueue.add(new SoundTick(this.shipExplodeSound, 1000));
 		}
+	}
+
+	public void respawnShip() {
+		// center the ship
+		this.ship.setY((HEIGHT / 2) - (SHIP_HEIGHT / 2));
+		this.scene.addEntity(3, this.ship);
+		this.ship.rebuild();
 	}
 
 	public Color randomColor(float alpha) {
@@ -160,9 +172,9 @@ public class Game implements KeyListener {
 		}
 		this.currentTick = System.nanoTime();
 		if (this.lastTick > 0) {
-			//first move everything
+			// first move everything
 			this.moveTick.tick(this);
-			
+
 			List<TickListener> toRemove = new ArrayList<>();
 			for (TickListener listener : this.tickListeners) {
 				listener.tick(this);
@@ -198,21 +210,26 @@ public class Game implements KeyListener {
 	}
 
 	public void moveAndEnsureInScene(Entity entity, double dX, double dY) {
+		this.moveAndEnsureInBox(entity, dX, dY, SCENE_BOX);
+	}
+
+	public void moveAndEnsureInBox(Entity entity, double dX, double dY,
+			Rectangle box) {
 		double width = entity.getWidth();
 		double height = entity.getHeight();
 		double newX = entity.getX() + dX;
 		double newY = entity.getY() + dY;
-		if (newX < 0) {
-			newX = 0;
+		if (newX < box.getX()) {
+			newX = box.getX();
 		}
-		if (newX + width >= WIDTH) {
-			newX = WIDTH - width;
+		if (newX + width >= box.getWidth() + box.getX()) {
+			newX = box.getWidth() - width + box.getX();
 		}
-		if (newY < 0) {
-			newY = 0;
+		if (newY < box.getY()) {
+			newY = box.getY();
 		}
-		if (newY + height >= HEIGHT) {
-			newY = HEIGHT - height;
+		if (newY + height >= box.getHeight() + box.getY()) {
+			newY = box.getHeight() - height + box.getY();
 		}
 		entity.setX(newX);
 		entity.setY(newY);
@@ -235,6 +252,8 @@ public class Game implements KeyListener {
 			this.down = true;
 		} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			this.shotButton = true;
+		} else if (e.getKeyCode() == KeyEvent.VK_R) {
+			this.reviveButton = true;
 		}
 	}
 
@@ -250,6 +269,8 @@ public class Game implements KeyListener {
 			this.down = false;
 		} else if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 			this.shotButton = false;
+		} else if (e.getKeyCode() == KeyEvent.VK_R) {
+			this.reviveButton = false;
 		}
 	}
 

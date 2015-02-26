@@ -13,15 +13,12 @@ public class Ship extends BaseEntity implements Destructible {
 	private static final Random random = new Random();
 
 	private Polygon polygon;
-	private boolean alive = true;
+	private boolean alive;
 
 	public Ship(double width, double height) {
 		super(true, width, height);
 		this.polygon = new Polygon();
-		this.polygon.addPoint(0, 0);
-		this.polygon.addPoint((int) width, (int) (height / 2));
-		this.polygon.addPoint(0, (int) height);
-		this.polygon.addPoint((int) (width / 2), (int) (height / 2));
+		this.rebuild();
 	}
 
 	@Override
@@ -41,7 +38,18 @@ public class Ship extends BaseEntity implements Destructible {
 			this.alive = false;
 		}
 	}
-	
+
+	public void rebuild() {
+		this.polygon = new Polygon();
+		this.polygon.addPoint(0, 0);
+		this.polygon.addPoint((int) this.getWidth(),
+				(int) (this.getHeight() / 2));
+		this.polygon.addPoint(0, (int) this.getHeight());
+		this.polygon.addPoint((int) (this.getWidth() / 2),
+				(int) (this.getHeight() / 2));
+		this.alive = true;
+	}
+
 	public boolean isAlive() {
 		return this.alive;
 	}
@@ -53,12 +61,12 @@ public class Ship extends BaseEntity implements Destructible {
 
 	@Override
 	public void hit(Game game, Object source, double damage) {
-		
+
 	}
 
 	@Override
 	public void destroy(Game game) {
-		
+
 	}
 
 }

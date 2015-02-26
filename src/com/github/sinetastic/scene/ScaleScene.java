@@ -2,6 +2,7 @@ package com.github.sinetastic.scene;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,6 +23,7 @@ public class ScaleScene extends JPanel {
 	private Set<Entity>[] entities;
 	private Set<Entity> allEntities;
 
+	@SuppressWarnings("unchecked")
 	public ScaleScene(int zSize) {
 		super(null);
 		this.setDoubleBuffered(true);
@@ -75,6 +77,8 @@ public class ScaleScene extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2d.scale(this.scaleX, this.scaleY);
 		super.paintComponent(g);
 		this.lock.lock();
