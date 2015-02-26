@@ -45,8 +45,14 @@ public class IntegralSign extends BaseEntity implements Destructible {
 			double x = (-1) * (Math.cos(arc) * width / 2) + width / 2;
 			double y = Math.sin(arc) * height / 2 + height / 2;
 			// half the x because width is for the whole sign
+			this.polygon.addPoint((int) x / 2, (int) y);
 			this.paintPolygon.addPoint((int) (x / 2 * PAINT_POLY_SCALE),
 					(int) (y * PAINT_POLY_SCALE));
+		}
+		// make this an area!
+		for (int i = this.polygon.npoints - 1; i >= 0; --i) {
+			this.polygon.addPoint(this.polygon.xpoints[i],
+					this.polygon.ypoints[i] + 1);
 		}
 		this.color = color;
 		this.callback = callback;

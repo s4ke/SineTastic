@@ -1,31 +1,42 @@
 package com.github.sinetastic.entities;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.util.function.BiFunction;
 
 import com.github.sinetastic.Game;
 
 public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 
+	public static Stroke DEFAULT_STROKE = new BasicStroke(1.6f,
+			BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+
 	private Polygon polygon;
-	private final double[] tmp;
-	private final double[] tmp2;
+	private final double[] tmp = new double[1];
+	private final double[] tmp2 = new double[1];
 	private final int steps;
 	private Color color = Color.RED;
 	private final ShotCallback shotCallback;
 	private double speedX;
 	private double speedY;
+	private final Stroke stroke;
 
 	public FxShot(boolean canCollide, double width, double height,
 			BiFunction<double[], double[], Void> fx, int steps,
 			ShotCallback shotCallback) {
+		this(canCollide, width, height, fx, steps, shotCallback, DEFAULT_STROKE);
+	}
+
+	public FxShot(boolean canCollide, double width, double height,
+			BiFunction<double[], double[], Void> fx, int steps,
+			ShotCallback shotCallback, Stroke stroke) {
 		super(canCollide, width, height);
-		this.tmp = new double[1];
-		this.tmp2 = new double[1];
 		this.polygon = new Polygon();
+		this.stroke = stroke;
 		this.shotCallback = shotCallback;
 		this.steps = steps;
 		double dX = width / this.steps;
@@ -37,8 +48,8 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 			this.polygon.addPoint((int) (dX * i), (int) (height / 2 - val));
 		}
 		// make this an area!
-		for (int i = 0; i < this.steps; ++i) {
-			this.polygon.addPoint(this.polygon.xpoints[i] + 1,
+		for (int i = this.steps - 1; i >= 0; --i) {
+			this.polygon.addPoint(this.polygon.xpoints[i],
 					this.polygon.ypoints[i] + 1);
 		}
 	}
@@ -58,6 +69,8 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 
 	@Override
 	public void paintSub(Graphics2D g2d) {
+		g2d = (Graphics2D) g2d.create();
+		g2d.setStroke(this.stroke);
 		g2d.setColor(this.color);
 		g2d.drawPolyline(this.polygon.xpoints, this.polygon.ypoints,
 				this.polygon.npoints);
