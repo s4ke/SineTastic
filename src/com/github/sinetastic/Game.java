@@ -107,7 +107,7 @@ public class Game implements KeyListener {
 		this.ship = new Ship(SHIP_WIDTH, SHIP_HEIGHT);
 		this.respawnShip();
 
-		this.tickListeners.add(new IntegralSignEnemyTick(10, 10));
+		this.tickListeners.add(new IntegralSignEnemyTick(100, 8));
 
 		{
 			// this.topWall = new ProceduralWall(true, WIDTH, 100,
@@ -148,6 +148,7 @@ public class Game implements KeyListener {
 	}
 
 	public void respawnShip() {
+		this.ship.setX(0);
 		// center the ship
 		this.ship.setY((HEIGHT / 2) - (SHIP_HEIGHT / 2));
 		this.scene.addEntity(3, this.ship);

@@ -11,14 +11,15 @@ import com.github.sinetastic.entities.FxShot;
 public class IntegralSignEnemyTick implements Game.TickListener,
 		IntegralSign.Callback {
 
-	private static final Rectangle CONTAINING_BOX = new Rectangle(100, 50,
-			(int) Game.WIDTH - 100, (int) Game.HEIGHT - 100);
+	private static final Rectangle CONTAINING_BOX = new Rectangle(100, 0,
+			(int) Game.WIDTH - 100, (int) Game.HEIGHT);
 
 	private static final int MIN_WIDTH = 15;
 	private static final int MIN_HEIGHT = 30;
 
 	private static final double MAX_SPEED_X = 0.3;
-	private static final double MAX_SPEED_Y = 0.1;
+	private static final double MIN_SPEED_Y = 0.05;
+	private static final double VAR_SPEED_Y = 0.05;
 
 	private static final int VAR_WIDTH = 1;
 	private static final int VAR_HEIGHT = 20;
@@ -44,18 +45,21 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 				final IntegralSign sign = this.createSign(game);
 				game.enqueue.add(new TickListener() {
 
-					// 1 SEC
-					private static final int SHOT_DELAY = 1000;
 					private static final int SHOT_WIDTH = 10;
 					private static final int SHOT_HEIGHT = 3;
-					
+
+					private long shotDelay = (long) (game.random.nextDouble() * 3000 + 1000);
 					private double yScale = game.random.nextDouble() * 4;
+					private double speedY = game.random.nextDouble()
+							* VAR_SPEED_Y + MIN_SPEED_Y;
+					private double sinSpeedY = this.speedY * 0.3;
 
 					private long lastShot;
 
 					private boolean finished = false;
 					private double sinPosX;
 					private double sinPosY;
+					private double signSin;
 					private FxShot shot;
 
 					@Override
@@ -66,20 +70,28 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 								double dX = -game.tdT(Math
 										.sin((this.sinPosX += 0.004))
 										* MAX_SPEED_X);
-								double dY = game.tdT(Math
-										.sin((this.sinPosY += 0.02))
-										* MAX_SPEED_Y * this.yScale);
+								double dY = game.tdT(this.speedY * this.yScale
+										+ this.sinSpeedY
+										* Math.sin(this.sinPosY += 0.01));
+								if (game.ship.isAlive()) {
+									dY *= Math.signum(game.ship.getY()
+											- sign.getY());
+								} else {
+									dY *= Math.signum(Math.sin(this.signSin += game.tdT(0.01)));
+								}
 								game.moveAndEnsureInBox(sign, dX, dY,
 										CONTAINING_BOX);
 
+								if (this.lastShot == 0) {
+									this.lastShot = (long) (game.currentTick + this.shotDelay);
+								}
 								// trigger a shot if we don't have one at the
 								// moment
-								boolean canShoot = game.diff(this.lastShot) > SHOT_DELAY
+								boolean canShoot = game.diff(this.lastShot) > this.shotDelay
 										&& this.shot == null;
 								if (canShoot) {
-									this.shot = new FxShot(true,
-											SHOT_WIDTH, SHOT_HEIGHT, (x,
-													position) -> {
+									this.shot = new FxShot(true, SHOT_WIDTH,
+											SHOT_HEIGHT, (x, position) -> {
 												x[0] = 0;
 												return null;
 											}, 2, new ShotCallback() {

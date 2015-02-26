@@ -1,10 +1,8 @@
 package com.github.sinetastic;
 
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.image.BufferStrategy;
 import java.io.IOException;
 
 import javax.sound.midi.MidiUnavailableException;
@@ -30,7 +28,6 @@ public class Engine {
 		this.frame.setLocationRelativeTo(null);
 
 		this.scene = new ScaleScene(6);
-		this.frame.setIgnoreRepaint(true);
 		this.frame.setName("SineTastic!");
 		this.frame.setTitle("SineTastic!");
 		this.frame.getContentPane().add(this.scene);
@@ -75,12 +72,7 @@ public class Engine {
 			public void run() {
 				while (true) {
 					Engine.this.game.tick();
-					BufferStrategy bufferStrategy = Engine.this.frame
-							.getBufferStrategy();
-					Graphics g = bufferStrategy.getDrawGraphics();
-					Engine.this.frame.paintAll(g);
-					g.dispose();
-					bufferStrategy.show();
+					Engine.this.frame.repaint();
 					this.previousDraw = this.currentDraw;
 					this.currentDraw = System.nanoTime() / 1000 / 1000;
 					long timeSpanSinceLastFrame = this.currentDraw
@@ -102,12 +94,7 @@ public class Engine {
 	public void show() {
 		this.frame.pack();
 		this.frame.setVisible(true);
-		this.frame.createBufferStrategy(2);
-		BufferStrategy bufferStrategy = this.frame.getBufferStrategy();
-		Graphics g = bufferStrategy.getDrawGraphics();
-		this.frame.paintAll(g);
-		g.dispose();
-		bufferStrategy.show();
+		this.frame.repaint();
 	}
 
 	public void cycle() {

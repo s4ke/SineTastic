@@ -9,8 +9,8 @@ import com.github.sinetastic.entities.Ship;
 
 public class UserShipTick implements Game.TickListener {
 
-	private static final double SHIP_SPEED_X = 0.1;
-	private static final double SHIP_SPEED_Y = 0.1;
+	private static final double SHIP_SPEED_X = 0.15;
+	private static final double SHIP_SPEED_Y = 0.15;
 
 	@Override
 	public void tick(Game game) {

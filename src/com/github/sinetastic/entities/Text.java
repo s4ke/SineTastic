@@ -1,10 +1,9 @@
 package com.github.sinetastic.entities;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.Shape;
 
 public class Text extends BaseEntity {
@@ -36,6 +35,7 @@ public class Text extends BaseEntity {
 
 	@Override
 	public void paintSub(Graphics2D g2d) {
+		g2d.setStroke(new BasicStroke(1));
 		g2d.setColor(this.color);
 		g2d.setFont(FONT);
 		g2d.drawString(this.text, 0, 0);
