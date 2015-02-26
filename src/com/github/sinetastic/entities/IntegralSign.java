@@ -11,11 +11,14 @@ import com.github.sinetastic.Game;
 
 public class IntegralSign extends BaseEntity implements Destructible {
 
+	private static final int POINTS_PER_SIGN = 50;
+	
 	private static final double RESOLUTION = 64;
 	private static final double PAINT_POLY_SCALE = 10;
 	private static final Stroke STROKE = new BasicStroke(
 			(int) (2 * PAINT_POLY_SCALE), BasicStroke.CAP_ROUND,
 			BasicStroke.JOIN_MITER);
+	
 	private final Color color;
 	private final Polygon polygon;
 	private final Polygon paintPolygon;
@@ -51,7 +54,7 @@ public class IntegralSign extends BaseEntity implements Destructible {
 		}
 		// make this an area!
 		for (int i = this.polygon.npoints - 1; i >= 0; --i) {
-			this.polygon.addPoint(this.polygon.xpoints[i],
+			this.polygon.addPoint(this.polygon.xpoints[i] + 1,
 					this.polygon.ypoints[i] + 1);
 		}
 		this.color = color;
@@ -81,6 +84,7 @@ public class IntegralSign extends BaseEntity implements Destructible {
 	@Override
 	public void destroy(Game game) {
 		this.callback.onDestroy(game, this);
+		game.addPoints(POINTS_PER_SIGN);
 	}
 
 }

@@ -74,10 +74,12 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 										+ this.sinSpeedY
 										* Math.sin(this.sinPosY += 0.01));
 								if (game.ship.isAlive()) {
-									dY *= Math.signum(game.ship.getY()
-											- sign.getY());
+									dY *= Math.signum((game.ship.getY() + game.ship
+											.getHeight() / 2)
+											- (sign.getY() + sign.getHeight() / 2));
 								} else {
-									dY *= Math.signum(Math.sin(this.signSin += game.tdT(0.01)));
+									dY *= Math.signum(Math
+											.sin(this.signSin += game.tdT(0.01)));
 								}
 								game.moveAndEnsureInBox(sign, dX, dY,
 										CONTAINING_BOX);

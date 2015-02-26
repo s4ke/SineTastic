@@ -70,6 +70,18 @@ public class ScaleScene extends JPanel {
 		}
 	}
 
+	public void clear() {
+		this.lock.lock();
+		try {
+			for (int i = 0; i < this.entities.length; ++i) {
+				this.entities[i].clear();
+			}
+			this.allEntities.clear();
+		} finally {
+			this.lock.unlock();
+		}
+	}
+
 	public Set<Entity> getChildrenEntities() {
 		return Collections.unmodifiableSet(this.allEntities);
 	}

@@ -9,6 +9,8 @@ import com.github.sinetastic.entities.Ship;
 
 public class UserShipTick implements Game.TickListener {
 
+	private static final long INVINCIBLE_TIME = 500;
+
 	private static final double SHIP_SPEED_X = 0.15;
 	private static final double SHIP_SPEED_Y = 0.15;
 
@@ -33,16 +35,21 @@ public class UserShipTick implements Game.TickListener {
 				}
 				game.moveAndEnsureInScene(game.ship, dX, dY);
 			}
-			Ship ship = game.ship;
-			if (ship.canCollide()) {
-				Area shipArea = new Area(ship.getCollisionShape());
-				shipArea.transform(AffineTransform.getTranslateInstance(
-						ship.getX(), ship.getY()));
-				this.checkForCollision(game, ship, shipArea,
-						game.scene.getChildrenEntities());
+			if (game.diff(game.getShipSpawnedTick()) > INVINCIBLE_TIME) {
+				game.ship.setVincible();
+				Ship ship = game.ship;
+				if (ship.canCollide()) {
+					Area shipArea = new Area(ship.getCollisionShape());
+					shipArea.transform(AffineTransform.getTranslateInstance(
+							ship.getX(), ship.getY()));
+					this.checkForCollision(game, ship, shipArea,
+							game.scene.getChildrenEntities());
+				}
+			} else {
+				game.ship.setInvincible();
 			}
 		} else {
-			if(game.reviveButton) {
+			if (game.reviveButton) {
 				game.respawnShip();
 			}
 		}

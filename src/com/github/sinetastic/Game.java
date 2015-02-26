@@ -1,11 +1,14 @@
 package com.github.sinetastic;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +29,20 @@ import com.github.sinetastic.entities.Text;
 import com.github.sinetastic.scene.ScaleScene;
 
 public class Game implements KeyListener {
+
+	public static final Font BASE_FONT;
+	static {
+		try (InputStream is = Text.class
+				.getResourceAsStream("/com/github/sinetastic/assets/quikhand/quikhand.ttf")) {
+			BASE_FONT = Font.createFont(Font.TRUETYPE_FONT, is);
+		} catch (FontFormatException | IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	private static final String POINTS_STRING = "Points:  ";
+	private static final String LIVES_TEXT = "Lives:   ";
+	private static final int START_LIVES = 3;
 
 	public static final double WIDTH = 600;
 	public static final double HEIGHT = 400;
@@ -51,14 +68,21 @@ public class Game implements KeyListener {
 	public Background background;
 	public ProceduralWall topWall;
 	public ProceduralWall botWall;
+
 	public long lastTick;
 	public long currentTick;
+	private long shipSpawnedTick;
 	public long frames = 0;
 	public long lastFpsTime;
 	private final Set<TickListener> tickListeners;
 	public final Random random;
 	public final List<TickListener> enqueue;
 	public UserShotTick userShotTick;
+	private UserShipTick userShipTick;
+	private int lives;
+	private Text livesText;
+	private int points;
+	private Text pointsText;
 
 	// This is special!
 	public MoveTick moveTick;
@@ -100,12 +124,9 @@ public class Game implements KeyListener {
 		this.background = new Background(WIDTH, HEIGHT);
 		this.scene.addEntity(5, this.background);
 
-		Text text = new Text(200, 200, Color.BLACK);
-		text.setText("Kills: ");
-		this.scene.addEntity(0, text);
-
 		this.ship = new Ship(SHIP_WIDTH, SHIP_HEIGHT);
-		this.respawnShip();
+		this.spawnShip();
+		this.shipSpawnedTick = 0;
 
 		this.tickListeners.add(new IntegralSignEnemyTick(100, 8));
 
@@ -134,25 +155,80 @@ public class Game implements KeyListener {
 			// this.tickListeners.add(new RockTick(15, 200));
 		}
 
-		this.tickListeners.add(new UserShipTick());
+		this.userShipTick = new UserShipTick();
 		this.tickListeners.add(this.userShotTick = new UserShotTick());
 
 		this.moveTick = new MoveTick();
+
+		this.pointsText = new Text(Color.BLUE, 20);
+		this.setPoints(0);
+		this.pointsText.setX(5);
+		this.pointsText.setY(20);
+		this.scene.addEntity(0, this.pointsText);
+
+		this.livesText = new Text(Color.BLUE, 20);
+		this.addLives(START_LIVES);
+		this.livesText.setX(5);
+		this.livesText.setY(40);
+		this.scene.addEntity(0, this.livesText);
 	}
 
 	public void shipCrashed() {
 		if (this.ship.isAlive()) {
 			this.ship.explode();
+			this.addLives(-1);
 			this.enqueue.add(new SoundTick(this.shipExplodeSound, 1000));
 		}
 	}
 
+	public void restartGame() {
+		this.tickListeners.clear();
+		this.enqueue.clear();
+		this.scene.clear();
+		this.setup();
+	}
+
+	public void addLives(long lives) {
+		this.lives += lives;
+		this.livesText.setText(LIVES_TEXT + this.lives);
+	}
+
+	public int getLives() {
+		return this.lives;
+	}
+
+	public void addPoints(int points) {
+		int newPoints = this.points;
+		if (this.lives > 0) {
+			newPoints += points;
+		}
+		this.setPoints(newPoints);
+	}
+
+	private void setPoints(int points) {
+		this.points = points;
+		this.pointsText.setText(POINTS_STRING + this.points);
+	}
+
 	public void respawnShip() {
+		if (this.lives == 0) {
+			this.restartGame();
+		} else {
+			this.spawnShip();
+		}
+	}
+	
+	public long getShipSpawnedTick() {
+		return this.shipSpawnedTick;
+	}
+
+	private void spawnShip() {
 		this.ship.setX(0);
 		// center the ship
 		this.ship.setY((HEIGHT / 2) - (SHIP_HEIGHT / 2));
 		this.scene.addEntity(3, this.ship);
 		this.ship.rebuild();
+		this.shipSpawnedTick = this.currentTick;
 	}
 
 	public Color randomColor(float alpha) {
@@ -197,7 +273,7 @@ public class Game implements KeyListener {
 				this.tickListeners.remove(rem);
 			}
 		}
-
+		this.userShipTick.tick(this);
 		this.lastTick = this.currentTick;
 	}
 

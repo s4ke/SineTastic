@@ -14,16 +14,18 @@ public class Ship extends BaseEntity implements Destructible {
 
 	private Polygon polygon;
 	private boolean alive;
+	private Color color;
 
 	public Ship(double width, double height) {
 		super(true, width, height);
 		this.polygon = new Polygon();
 		this.rebuild();
+		this.setVincible();
 	}
 
 	@Override
 	public void paintSub(Graphics2D g2d) {
-		g2d.setColor(Color.RED);
+		g2d.setColor(this.color);
 		g2d.fillPolygon(this.polygon);
 	}
 
@@ -37,6 +39,14 @@ public class Ship extends BaseEntity implements Destructible {
 			}
 			this.alive = false;
 		}
+	}
+	
+	public void setInvincible() {
+		this.color = Color.BLUE;
+	}
+	
+	public void setVincible() {
+		this.color = Color.RED;
 	}
 
 	public void rebuild() {
