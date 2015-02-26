@@ -48,6 +48,8 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 					private static final int SHOT_DELAY = 1000;
 					private static final int SHOT_WIDTH = 10;
 					private static final int SHOT_HEIGHT = 3;
+					
+					private double yScale = game.random.nextDouble() * 4;
 
 					private long lastShot;
 
@@ -66,7 +68,7 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 										* MAX_SPEED_X);
 								double dY = game.tdT(Math
 										.sin((this.sinPosY += 0.02))
-										* MAX_SPEED_Y);
+										* MAX_SPEED_Y * this.yScale);
 								game.moveAndEnsureInBox(sign, dX, dY,
 										CONTAINING_BOX);
 
