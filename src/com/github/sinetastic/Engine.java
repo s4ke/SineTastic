@@ -28,8 +28,8 @@ public class Engine {
 		this.frame.setLocationRelativeTo(null);
 
 		this.scene = new ScaleScene(6);
-		this.frame.setName("SineTastic!");
-		this.frame.setTitle("SineTastic!");
+		this.frame.setName("Rocktastic!");
+		this.frame.setTitle("RockTastic!");
 		this.frame.getContentPane().add(this.scene);
 		this.scene.setPreferredSize(new Dimension((int) Game.WIDTH,
 				(int) Game.HEIGHT));

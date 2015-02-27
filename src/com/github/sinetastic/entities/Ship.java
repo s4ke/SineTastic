@@ -3,30 +3,49 @@ package com.github.sinetastic.entities;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 import com.github.sinetastic.Game;
 
 public class Ship extends BaseEntity implements Destructible {
+	
+	private static final BufferedImage IMAGE;
+	static {
+		try {
+			IMAGE = ImageIO.read(Ship.class.getResource("/com/github/sinetastic/assets/rocketbeans/rocket.png"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	private static final Random random = new Random();
 
 	private Polygon polygon;
+	private Rectangle lazyHitBox;
 	private boolean alive;
 	private Color color;
 
 	public Ship(double width, double height) {
 		super(true, width, height);
-		this.polygon = new Polygon();
+		this.lazyHitBox = new Rectangle((int) width, (int) height);
 		this.rebuild();
 		this.setVincible();
 	}
 
 	@Override
 	public void paintSub(Graphics2D g2d) {
-		g2d.setColor(this.color);
-		g2d.fillPolygon(this.polygon);
+		if(this.alive) {
+			g2d.drawImage(IMAGE, 0, 0, null);
+		} else {
+			g2d.setColor(this.color);
+			g2d.fillPolygon(this.polygon);
+		}
 	}
 
 	public void explode() {
@@ -50,13 +69,6 @@ public class Ship extends BaseEntity implements Destructible {
 	}
 
 	public void rebuild() {
-		this.polygon = new Polygon();
-		this.polygon.addPoint(0, 0);
-		this.polygon.addPoint((int) this.getWidth(),
-				(int) (this.getHeight() / 2));
-		this.polygon.addPoint(0, (int) this.getHeight());
-		this.polygon.addPoint((int) (this.getWidth() / 2),
-				(int) (this.getHeight() / 2));
 		this.alive = true;
 	}
 
@@ -66,7 +78,7 @@ public class Ship extends BaseEntity implements Destructible {
 
 	@Override
 	public Shape getCollisionShape() {
-		return this.polygon;
+		return this.lazyHitBox;
 	}
 
 	@Override

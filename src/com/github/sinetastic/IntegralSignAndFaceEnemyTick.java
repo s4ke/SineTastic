@@ -1,18 +1,77 @@
 package com.github.sinetastic;
 
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import com.github.sinetastic.Game.TickListener;
+import com.github.sinetastic.entities.Entity;
 import com.github.sinetastic.entities.IntegralSign;
+import com.github.sinetastic.entities.Ship;
 import com.github.sinetastic.entities.Shot;
 import com.github.sinetastic.entities.ShotCallback;
 import com.github.sinetastic.entities.FxShot;
+import com.github.sinetastic.entities.Face;
 
-public class IntegralSignEnemyTick implements Game.TickListener,
-		IntegralSign.Callback {
+public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
+		IntegralSign.Callback, Face.Callback {
 
 	private static final Rectangle CONTAINING_BOX = new Rectangle(100, 0,
 			(int) Game.WIDTH - 100, (int) Game.HEIGHT);
+
+	private static final double NILS_FACE_HEIGHT = 50;
+	private static final double NILS_FACE_WIDTH = 35;
+	private static final BufferedImage NILS_IMAGE;
+	static {
+		try {
+			NILS_IMAGE = ImageIO
+					.read(Ship.class
+							.getResource("/com/github/sinetastic/assets/rocketbeans/nils.png"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private static final double EDE_FACE_HEIGHT = 50;
+	private static final double EDE_FACE_WIDTH = 38;
+	private static final BufferedImage EDE_IMAGE;
+	static {
+		try {
+			EDE_IMAGE = ImageIO
+					.read(Ship.class
+							.getResource("/com/github/sinetastic/assets/rocketbeans/ede.png"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private static final double BUDI_FACE_HEIGHT = 50;
+	private static final double BUDI_FACE_WIDTH = 42;
+	private static final BufferedImage BUDI_IMAGE;
+	static {
+		try {
+			BUDI_IMAGE = ImageIO
+					.read(Ship.class
+							.getResource("/com/github/sinetastic/assets/rocketbeans/budi.png"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	private static final double SIMON_FACE_HEIGHT = 50;
+	private static final double SIMON_FACE_WIDTH = 42;
+	private static final BufferedImage SIMON_IMAGE;
+	static {
+		try {
+			SIMON_IMAGE = ImageIO
+					.read(Ship.class
+							.getResource("/com/github/sinetastic/assets/rocketbeans/simon.png"));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	private static final int MIN_WIDTH = 15;
 	private static final int MIN_HEIGHT = 30;
@@ -30,7 +89,7 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 	private final int delay;
 	private final int maxCount;
 
-	public IntegralSignEnemyTick(int delay, int maxCount) {
+	public IntegralSignAndFaceEnemyTick(int delay, int maxCount) {
 		this.delay = delay;
 		this.maxCount = maxCount;
 	}
@@ -42,7 +101,12 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 			boolean spawnNew = game.diff(this.lastSpawn) > this.delay
 					&& this.aliveCount < this.maxCount;
 			if (spawnNew) {
-				final IntegralSign sign = this.createSign(game);
+				final Entity sign;
+//				if (game.random.nextBoolean()) {
+					sign = this.createFace(game);
+//				} else {
+//					sign = this.createSign(game);
+//				}
 				game.enqueue.add(new TickListener() {
 
 					private static final int SHOT_WIDTH = 10;
@@ -71,9 +135,11 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 								double dX = -game.tdT(Math
 										.sin((this.sinPosX += 0.004))
 										* MAX_SPEED_X);
-								double dY = game.tdT(this.speedY * this.yScale
+								double dY = game.tdT(this.speedY
+										* this.yScale
 										+ this.sinSpeedY
-										* Math.abs(Math.sin(this.sinPosY += 0.01)));
+										* Math.abs(Math
+												.sin(this.sinPosY += 0.01)));
 								if (game.ship.isAlive()) {
 									dY *= signToShip = Math.signum((game.ship
 											.getY() + game.ship.getHeight() / 2)
@@ -154,6 +220,35 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 		return false;
 	}
 
+	private Face createFace(Game game) {
+		Face face;
+		switch (game.random.nextInt(4)) {
+		case 0:
+			face = new Face(true, SIMON_FACE_WIDTH, SIMON_FACE_HEIGHT,
+					SIMON_IMAGE, this);
+			break;
+		case 1:
+			face = new Face(true, BUDI_FACE_WIDTH, BUDI_FACE_HEIGHT,
+					BUDI_IMAGE, this);
+			break;
+		case 2:
+			face = new Face(true, EDE_FACE_WIDTH, EDE_FACE_HEIGHT,
+					EDE_IMAGE, this);
+			break;
+		case 3:
+			face = new Face(true, NILS_FACE_WIDTH, NILS_FACE_HEIGHT,
+					NILS_IMAGE, this);
+			break;
+		default:
+			throw new AssertionError();
+		}
+		game.moveAndEnsureInBox(face, Game.WIDTH - face.getWidth(),
+				game.random.nextInt((int) Game.HEIGHT), CONTAINING_BOX);
+		game.scene.addEntity(4, face);
+		++this.aliveCount;
+		return face;
+	}
+
 	private IntegralSign createSign(Game game) {
 		IntegralSign integralSign = new IntegralSign(true,
 				game.random.nextInt(VAR_WIDTH) + MIN_WIDTH,
@@ -172,6 +267,13 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 		--this.aliveCount;
 		sign.setVisible(false);
 		game.scene.removeEntity(4, sign);
+	}
+
+	@Override
+	public void onDestroy(Game game, Face face) {
+		--this.aliveCount;
+		face.setVisible(false);
+		game.scene.removeEntity(4, face);
 	}
 
 }

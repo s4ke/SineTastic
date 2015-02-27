@@ -50,7 +50,7 @@ public class Game implements KeyListener {
 	private static final Rectangle SCENE_BOX = new Rectangle(0, 0, (int) WIDTH,
 			(int) HEIGHT);
 
-	private static final double SHIP_WIDTH = 25;
+	private static final double SHIP_WIDTH = 18;
 	private static final double SHIP_HEIGHT = 18;
 
 	public boolean up;
@@ -128,7 +128,7 @@ public class Game implements KeyListener {
 		this.spawnShip();
 		this.shipSpawnedTick = 0;
 
-		this.tickListeners.add(new IntegralSignEnemyTick(100, 8));
+		this.tickListeners.add(new IntegralSignAndFaceEnemyTick(100, 8));
 
 		{
 			// this.topWall = new ProceduralWall(true, WIDTH, 100,

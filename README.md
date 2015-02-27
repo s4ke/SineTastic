@@ -7,7 +7,7 @@ Controls:
 - Space Bar for Shooting<br>
 - R for Restart/Revive
 
-[Download](sinetastic-game-0.1-jar-with-dependencies.jar?raw=true)
+[Download](rocktastic.jar?raw=true)
 
 ![Current State](preview.jpg "Current State")
 
