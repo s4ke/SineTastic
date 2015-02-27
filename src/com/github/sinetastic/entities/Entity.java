@@ -21,10 +21,6 @@ public interface Entity {
 
 	public double getHeight();
 
-	public double getRotate();
-
-	public void setRotate(double rotate);
-
 	public void setScale(double scale);
 
 	public double getScale();
@@ -39,9 +35,6 @@ public interface Entity {
 
 	/**
 	 * ATTENTION: SLOW!
-	 * 
-	 * @param other
-	 * @return
 	 */
 	public default boolean intersects(Entity other) {
 		if (!this.canCollide()) {

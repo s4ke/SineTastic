@@ -18,7 +18,7 @@ public class Engine {
 	private final JFrame frame;
 	private final ScaleScene scene;
 	private final Thread logicThread;
-	// 60 FPS
+	
 	private static final int TIME_BETWEEN_FRAMES_MS = 5;
 
 	public Engine() throws MidiUnavailableException, LineUnavailableException,

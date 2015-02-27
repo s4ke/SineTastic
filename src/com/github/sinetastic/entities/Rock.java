@@ -7,15 +7,24 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 
-public class Rock extends BaseEntity {
+import com.github.sinetastic.Game;
+
+public class Rock extends BaseEntity implements Destructible {
 
 	private Shape shape;
 	private final Color color;
 	private boolean alive = true;
 	private final boolean fill;
+	private final Callback callback;
+	
+	public static interface Callback {
+		
+		public void onDestroy(Game game, Rock rock);
+		
+	}
 
 	public Rock(boolean canCollide, double width, double height, Color color, boolean fill,
-			boolean rect) {
+			boolean rect, Callback callback) {
 		super(canCollide, width, height);
 		if (rect) {
 			this.shape = new Rectangle(0, 0, (int) width, (int) height);
@@ -24,6 +33,7 @@ public class Rock extends BaseEntity {
 		}
 		this.color = color;
 		this.fill = fill;
+		this.callback = callback;
 	}
 
 	@Override
@@ -43,6 +53,18 @@ public class Rock extends BaseEntity {
 			g2d.fill(this.shape);
 		} else {
 			g2d.draw(this.shape);
+		}
+	}
+
+	@Override
+	public void hit(Game game, Object source, double damage) {
+		this.destroy(game);
+	}
+
+	@Override
+	public void destroy(Game game) {
+		if(this.callback != null) {
+			this.callback.onDestroy(game, this);
 		}
 	}
 

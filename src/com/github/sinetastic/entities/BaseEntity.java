@@ -7,7 +7,6 @@ public abstract class BaseEntity implements Entity {
 	private double scale = 1.0;
 	private double x;
 	private double y;
-	private double rotate;
 	private double width;
 	private double height;
 	private final boolean canCollide;
@@ -37,16 +36,6 @@ public abstract class BaseEntity implements Entity {
 	@Override
 	public boolean canCollide() {
 		return this.canCollide;
-	}
-
-	@Override
-	public double getRotate() {
-		return this.rotate;
-	}
-
-	@Override
-	public void setRotate(double rotate) {
-		this.rotate = rotate;
 	}
 
 	@Override

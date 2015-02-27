@@ -152,15 +152,20 @@ public class Game implements KeyListener {
 			// this.tickListeners
 			// .add(new BackGroundMoveTick(this.topWall, botWall));
 
-			// this.tickListeners.add(new RockTick(15, 200));
+			 this.tickListeners.add(new RockTick(7, 200));
 		}
 
 		this.userShipTick = new UserShipTick();
 		this.tickListeners.add(this.userShotTick = new UserShotTick());
 
 		this.moveTick = new MoveTick();
+		
+//		Sinusal sinusal = new Sinusal(true, 200, 200, this.randomColor(1.0f));
+//		sinusal.setX(200);
+//		sinusal.setY(200);
+//		this.scene.addEntity(3, sinusal);
 
-		this.pointsText = new Text(Color.BLUE, 20);
+		this.pointsText =  new Text(Color.BLUE, 20);
 		this.setPoints(0);
 		this.pointsText.setX(5);
 		this.pointsText.setY(20);
@@ -237,16 +242,16 @@ public class Game implements KeyListener {
 	}
 
 	public void tick() {
-		if (++this.frames > 10) {
-			long currentTime = System.nanoTime() / 1000 / 1000;
-			if (this.lastFpsTime > 0) {
-				double fps = (((double) this.frames) / (currentTime - this.lastFpsTime)) * 1000;
-				System.out.println(new StringBuilder().append(fps)
-						.append(" fps").toString());
-			}
-			this.frames = 0;
-			this.lastFpsTime = currentTime;
-		}
+//		if (++this.frames > 10) {
+//			long currentTime = System.nanoTime() / 1000 / 1000;
+//			if (this.lastFpsTime > 0) {
+//				double fps = (((double) this.frames) / (currentTime - this.lastFpsTime)) * 1000;
+//				System.out.println(new StringBuilder().append(fps)
+//						.append(" fps").toString());
+//			}
+//			this.frames = 0;
+//			this.lastFpsTime = currentTime;
+//		}
 		this.currentTick = System.nanoTime();
 		if (this.lastTick > 0) {
 			// first move everything

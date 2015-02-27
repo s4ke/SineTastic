@@ -74,6 +74,7 @@ public class IntegralSign extends BaseEntity implements Destructible {
 		g2d.setColor(color);
 		g2d.drawPolyline(this.paintPolygon.xpoints, this.paintPolygon.ypoints,
 				this.paintPolygon.npoints);
+		g2d.dispose();
 	}
 
 	@Override

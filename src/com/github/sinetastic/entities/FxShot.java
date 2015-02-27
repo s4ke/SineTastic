@@ -18,7 +18,6 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 	private Polygon polygon;
 	private final double[] tmp = new double[1];
 	private final double[] tmp2 = new double[1];
-	private final int steps;
 	private Color color = Color.RED;
 	private final ShotCallback shotCallback;
 	private double speedX;
@@ -35,23 +34,10 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 			BiFunction<double[], double[], Void> fx, int steps,
 			ShotCallback shotCallback, Stroke stroke) {
 		super(canCollide, width, height);
-		this.polygon = new Polygon();
 		this.stroke = stroke;
 		this.shotCallback = shotCallback;
-		this.steps = steps;
-		double dX = width / this.steps;
-		for (int i = 0; i < this.steps; ++i) {
-			this.tmp[0] = i;
-			this.tmp2[0] = dX * i;
-			fx.apply(this.tmp, this.tmp2);
-			double val = this.tmp[0] * height / 2;
-			this.polygon.addPoint((int) (dX * i), (int) (height / 2 - val));
-		}
-		// make this an area!
-		for (int i = this.steps - 1; i >= 0; --i) {
-			this.polygon.addPoint(this.polygon.xpoints[i],
-					this.polygon.ypoints[i] + 1);
-		}
+		this.polygon = FxUtil.makeArea(FxUtil.createPolygonFromFunction(fx,
+				steps, width, height, this.tmp, this.tmp2), steps, 0, 1);
 	}
 
 	@Override
@@ -74,6 +60,7 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 		g2d.setColor(this.color);
 		g2d.drawPolyline(this.polygon.xpoints, this.polygon.ypoints,
 				this.polygon.npoints);
+		g2d.dispose();
 	}
 
 	public void setSpeedX(double speedX) {
