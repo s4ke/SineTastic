@@ -57,6 +57,7 @@ public class Engine {
 			public void componentHidden(ComponentEvent e) {
 
 			}
+			
 		});
 
 		this.game = new Game(this.scene);

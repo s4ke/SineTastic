@@ -41,7 +41,7 @@ public class Game implements KeyListener {
 	}
 
 	private static final String POINTS_STRING = "Points:  ";
-	private static final String LIVES_TEXT = "Lives:   ";
+	private static final String LIVES_TEXT = "Lives:    ";
 	private static final int START_LIVES = 3;
 
 	public static final double WIDTH = 600;
