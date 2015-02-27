@@ -18,7 +18,7 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 	private static final int MIN_HEIGHT = 30;
 
 	private static final double MAX_SPEED_X = 0.3;
-	private static final double MIN_SPEED_Y = 0.05;
+	private static final double MIN_SPEED_Y = 0.09;
 	private static final double VAR_SPEED_Y = 0.05;
 
 	private static final int VAR_WIDTH = 1;
@@ -73,7 +73,7 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 										* MAX_SPEED_X);
 								double dY = game.tdT(this.speedY * this.yScale
 										+ this.sinSpeedY
-										* Math.sin(this.sinPosY += 0.01));
+										* Math.abs(Math.sin(this.sinPosY += 0.01)));
 								if (game.ship.isAlive()) {
 									dY *= signToShip = Math.signum((game.ship
 											.getY() + game.ship.getHeight() / 2)
