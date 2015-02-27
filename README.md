@@ -5,7 +5,7 @@ Controls:
 
 - Arrow Keys for Movement<br>
 - Space Bar for Shooting<br>
-- R for Restart
+- R for Restart/Revive
 
 [Download](sinetastic-game-0.1-jar-with-dependencies.jar?raw=true)
 
