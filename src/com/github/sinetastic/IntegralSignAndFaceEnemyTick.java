@@ -33,7 +33,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private static final double EDE_FACE_HEIGHT = 50;
 	private static final double EDE_FACE_WIDTH = 38;
 	private static final BufferedImage EDE_IMAGE;
@@ -46,7 +46,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private static final double BUDI_FACE_HEIGHT = 50;
 	private static final double BUDI_FACE_WIDTH = 42;
 	private static final BufferedImage BUDI_IMAGE;
@@ -59,7 +59,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private static final double SIMON_FACE_HEIGHT = 50;
 	private static final double SIMON_FACE_WIDTH = 42;
 	private static final BufferedImage SIMON_IMAGE;
@@ -102,11 +102,11 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 					&& this.aliveCount < this.maxCount;
 			if (spawnNew) {
 				final Entity sign;
-//				if (game.random.nextBoolean()) {
-					sign = this.createFace(game);
-//				} else {
-//					sign = this.createSign(game);
-//				}
+				// if (game.random.nextBoolean()) {
+				sign = this.createFace(game);
+				// } else {
+				// sign = this.createSign(game);
+				// }
 				game.enqueue.add(new TickListener() {
 
 					private static final int SHOT_WIDTH = 10;
@@ -185,14 +185,16 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 									// mid of the sign
 									double y = sign.getY() + sign.getHeight()
 											/ 2;
-									if (sign.getHeight() > game.ship
-											.getHeight()) {
-										// if the ship is alive shoot in the
-										// direction of it
-										y += signToShip
-												* (sign.getHeight() / 2 - game.ship
-														.getHeight() / 2);
-									}
+									// if (sign.getHeight() > game.ship
+									// .getHeight()) {
+									// if the ship is alive shoot in the
+									// direction of it
+									y += signToShip
+											* Math.abs((game.ship.getY() + game.ship
+													.getHeight() / 2)
+													- (sign.getY() + sign
+															.getHeight() / 2));
+									// }
 									shot.setY(y);
 									game.scene.addEntity(4, shot);
 									game.moveTick.enqueue.add(shot);
@@ -232,8 +234,8 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 					BUDI_IMAGE, this);
 			break;
 		case 2:
-			face = new Face(true, EDE_FACE_WIDTH, EDE_FACE_HEIGHT,
-					EDE_IMAGE, this);
+			face = new Face(true, EDE_FACE_WIDTH, EDE_FACE_HEIGHT, EDE_IMAGE,
+					this);
 			break;
 		case 3:
 			face = new Face(true, NILS_FACE_WIDTH, NILS_FACE_HEIGHT,
