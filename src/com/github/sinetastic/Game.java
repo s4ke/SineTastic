@@ -50,7 +50,7 @@ public class Game implements KeyListener {
 	private static final Rectangle SCENE_BOX = new Rectangle(0, 0, (int) WIDTH,
 			(int) HEIGHT);
 
-	private static final double SHIP_WIDTH = 25;
+	private static final double SHIP_WIDTH = 18;
 	private static final double SHIP_HEIGHT = 18;
 
 	public boolean up;

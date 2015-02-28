@@ -71,9 +71,11 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 								double dX = -game.tdT(Math
 										.sin((this.sinPosX += 0.004))
 										* MAX_SPEED_X);
-								double dY = game.tdT(this.speedY * this.yScale
+								double dY = game.tdT(this.speedY
+										* this.yScale
 										+ this.sinSpeedY
-										* Math.abs(Math.sin(this.sinPosY += 0.01)));
+										* Math.abs(Math
+												.sin(this.sinPosY += 0.01)));
 								if (game.ship.isAlive()) {
 									dY *= signToShip = Math.signum((game.ship
 											.getY() + game.ship.getHeight() / 2)
@@ -119,14 +121,13 @@ public class IntegralSignEnemyTick implements Game.TickListener,
 									// mid of the sign
 									double y = sign.getY() + sign.getHeight()
 											/ 2;
-									if (sign.getHeight() > game.ship
-											.getHeight()) {
-										// if the ship is alive shoot in the
-										// direction of it
-										y += signToShip
-												* (sign.getHeight() / 2 - game.ship
-														.getHeight() / 2);
-									}
+									// if the ship is alive shoot in the
+									// direction of it
+									y += signToShip
+											* Math.abs((game.ship.getY() + game.ship
+													.getHeight() / 2)
+													- (sign.getY() + sign
+															.getHeight() / 2));
 									shot.setY(y);
 									game.scene.addEntity(4, shot);
 									game.moveTick.enqueue.add(shot);
