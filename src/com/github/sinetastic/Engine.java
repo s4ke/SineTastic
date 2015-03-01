@@ -18,7 +18,7 @@ public class Engine {
 	private final JFrame frame;
 	private final ScaleScene scene;
 	private final Thread logicThread;
-	
+
 	private static final int TIME_BETWEEN_FRAMES_MS = 5;
 
 	public Engine() throws MidiUnavailableException, LineUnavailableException,
@@ -57,7 +57,7 @@ public class Engine {
 			public void componentHidden(ComponentEvent e) {
 
 			}
-			
+
 		});
 
 		this.game = new Game(this.scene);
@@ -107,10 +107,11 @@ public class Engine {
 			UnsupportedAudioFileException {
 		Engine engine = new Engine();
 		engine.show();
-		for(double d = 0; d < Math.PI; d += 0.00001) {
-			Game.sin(d);
+		for (int i = 0; i < 100; ++i) {
+			for (double d = 0; d < Math.PI; d += 0.00001) {
+				Game.sin(d);
+			}
 		}
 		engine.cycle();
 	}
-
 }
