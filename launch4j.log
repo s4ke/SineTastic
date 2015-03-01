@@ -1,0 +1,22 @@
+
+
+Version:	3.6
+CmdLine:	C:\Users\Martin\Documents\GitHub\SineTastic\rocktastic.exe --l4j-debug
+WOW64:		yes
+Working dir:	C:\Users\Martin\Documents\GitHub\SineTastic\.
+64-bit search:	SOFTWARE\JavaSoft\Java Runtime Environment...
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Runtime Environment\1.8.0_31
+Check launcher:	C:\Program Files\Java\jre1.8.0_31\bin\javaw.exe (OK)
+Match:		1.8.0_31
+64-bit search:	SOFTWARE\JavaSoft\Java Development Kit...
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8
+Ignore:		1.8
+Check:		SOFTWARE\JavaSoft\Java Development Kit\1.8.0_31
+Ignore:		1.8.0_31
+Runtime used:	1.8.0_31 (64-bit)
+Launcher:	C:\Program Files\Java\jre1.8.0_31\bin\javaw.exe
+Launcher args:	-jar "C:\Users\Martin\Documents\GitHub\SineTastic\rocktastic.exe"
+Args length:	65/32768 chars
+Exit code:	0
