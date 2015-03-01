@@ -14,6 +14,8 @@ Controls:
 
 # TODO:
 
+- Verschiedene neue spielbare Charaktere
 - Neue Gegnertypen
+- neue Angriffsarten?
 - Ideen aus der Community?
 
