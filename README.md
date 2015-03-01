@@ -2,7 +2,7 @@
 
 Die Raketenbohne musste sich gegen manch "geniale" Idee von Budi, Simon, Nils und Etienne wehren um ihren eigenen Sender zu bekommen. Außerdem muss sie ständig Viacom und Konsorten ausweichen um einen Crash zu vermeiden... 
 
-Dieses Spiel erzählt die wahre Geschichte, wie sie das geschafft hat.
+Dieses Spiel erzählt die wahre Geschichte, wie sie es dennoch geschafft hat.
 
 Controls:
 
