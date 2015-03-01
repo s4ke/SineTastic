@@ -22,7 +22,7 @@ public class Engine {
 	public long frames = 0;
 	public long lastFpsTime = 0;
 
-	private static final int TIME_BETWEEN_TICKS_MS = 10;
+	private static final int TIME_BETWEEN_TICKS_MS = 5;
 	private static final int TIME_BETWEEN_REPAINTS_MS = 10;
 
 	public Engine() throws MidiUnavailableException, LineUnavailableException,

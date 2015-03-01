@@ -112,7 +112,8 @@ public class Game implements KeyListener {
 	public long lastTick;
 	public long currentTick;
 	private long shipSpawnedTick;
-	public long lastFpsTime;
+	public long ticks = 0;
+	public long lastTpsTime;
 	private final Set<TickListener> tickListeners;
 	public final Random random;
 	public final List<TickListener> enqueue;
@@ -286,6 +287,16 @@ public class Game implements KeyListener {
 	}
 
 	public void tick() {
+		if (++this.ticks > 500) {
+			long currentTime = System.nanoTime() / 1000 / 1000 / 1000;
+			if (this.lastTpsTime > 0) {
+				double ticksPerSecond = (((double) this.ticks) / (currentTime - this.lastTpsTime));
+				System.out.println(new StringBuilder().append(ticksPerSecond)
+						.append(" ticks per second").toString());
+			}
+			this.ticks = 0;
+			this.lastTpsTime = currentTime;
+		}
 		this.currentTick = System.currentTimeMillis();
 		if (this.lastTick > 0) {
 			// first move everything

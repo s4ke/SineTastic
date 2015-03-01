@@ -79,7 +79,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 	private static final int MIN_HEIGHT = 30;
 
 	private static final double MAX_SPEED_X = 0.25;
-	private static final double MIN_SPEED_Y = 0.09;
+	private static final double MIN_SPEED_Y = 0.13;
 	private static final double VAR_SPEED_Y = 0.05;
 
 	private static final int VAR_WIDTH = 1;
@@ -114,11 +114,10 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 					private static final int SHOT_WIDTH = 10;
 					private static final int SHOT_HEIGHT = 3;
 
-					private long shotDelay = (long) (game.random.nextDouble() * 3000 + 1000);
-					private double yScale = game.random.nextDouble() * 4;
+					private long shotDelay = (long) 2000;
+					private double yScale = game.random.nextDouble() * 4 + 0.2;
 					private double speedY = game.random.nextDouble()
 							* VAR_SPEED_Y + MIN_SPEED_Y;
-					private double sinSpeedY = this.speedY * 0.3;
 
 					private long lastShot;
 
@@ -142,9 +141,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 								double dX = -Game.sin((this.sinPosX += game
 										.tdT(0.0015))) * MAX_SPEED_X;
 								double dY = this.speedY
-										* this.yScale
-										+ this.sinSpeedY
-										* Math.abs(Game
+										* this.yScale * Math.abs(Game
 												.sin(this.sinPosY += game
 														.tdT((0.005))));
 								if (game.ship.isAlive()) {
@@ -193,7 +190,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 
 											});
 									shot.setVisible(true);
-									shot.setSpeedX(-0.5);
+									shot.setSpeedX(-0.45);
 									shot.setX(sign.getX() - 5);
 									// mid of the sign
 									double y = sign.getY() + sign.getHeight()
