@@ -196,7 +196,7 @@ public class Game implements KeyListener {
 			// this.tickListeners
 			// .add(new BackGroundMoveTick(this.topWall, botWall));
 
-			this.tickListeners.add(new RockTick(7, 200));
+			this.tickListeners.add(new RockAndNonShootingEnemyTick(7, 200));
 		}
 
 		this.userShipTick = new UserShipTick();

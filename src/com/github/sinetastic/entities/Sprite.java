@@ -7,26 +7,26 @@ import java.awt.image.BufferedImage;
 
 import com.github.sinetastic.Game;
 
-public class Face extends BaseEntity implements Destructible {
-
-	private static final int POINTS_PER_FACE = 100;
-
+public class Sprite extends BaseEntity implements Destructible {
+	
+	private final int points;
 	private final BufferedImage image;
 	private final Callback callback;
 	private final Rectangle lazyHitbox;
 
 	public static interface Callback {
 
-		public void onDestroy(Game game, Face face);
+		public void onDestroy(Game game, Sprite face);
 
 	}
 
-	public Face(boolean canCollide, double width, double height,
-			BufferedImage image, Callback callback) {
+	public Sprite(boolean canCollide, double width, double height,
+			BufferedImage image, Callback callback, int points) {
 		super(canCollide, width, height);
 		this.image = image;
 		this.callback = callback;
 		this.lazyHitbox = new Rectangle((int) width, (int) height);
+		this.points = points;
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class Face extends BaseEntity implements Destructible {
 	@Override
 	public void destroy(Game game) {
 		this.callback.onDestroy(game, this);
-		game.addPoints(POINTS_PER_FACE);
+		game.addPoints(this.points);
 	}
 	
 }

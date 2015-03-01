@@ -13,13 +13,15 @@ import com.github.sinetastic.entities.Ship;
 import com.github.sinetastic.entities.Shot;
 import com.github.sinetastic.entities.ShotCallback;
 import com.github.sinetastic.entities.FxShot;
-import com.github.sinetastic.entities.Face;
+import com.github.sinetastic.entities.Sprite;
 
 public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
-		IntegralSign.Callback, Face.Callback {
+		IntegralSign.Callback, Sprite.Callback {
 
 	private static final Rectangle CONTAINING_BOX = new Rectangle(100, 0,
 			(int) Game.WIDTH - 100, (int) Game.HEIGHT);
+
+	private static final int POINTS_PER_FACE = 100;
 
 	private static final double NILS_FACE_HEIGHT = 50;
 	private static final double NILS_FACE_WIDTH = 35;
@@ -141,7 +143,8 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 								double dX = -Game.sin((this.sinPosX += game
 										.tdT(0.0015))) * MAX_SPEED_X;
 								double dY = this.speedY
-										* this.yScale * Math.abs(Game
+										* this.yScale
+										* Math.abs(Game
 												.sin(this.sinPosY += game
 														.tdT((0.005))));
 								if (game.ship.isAlive()) {
@@ -155,7 +158,8 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 								}
 								dX = game.tdT(dX);
 								dY = game.tdT(dY);
-								if (game.ship.isAlive() && Math.abs(dY) > differenceBetweenMids) {
+								if (game.ship.isAlive()
+										&& Math.abs(dY) > differenceBetweenMids) {
 									dY = signToShip * differenceBetweenMids;
 								}
 								game.moveAndEnsureInBox(sign, dX, dY,
@@ -225,24 +229,24 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 		return false;
 	}
 
-	private Face createFace(Game game) {
-		Face face;
+	private Sprite createFace(Game game) {
+		Sprite face;
 		switch (game.random.nextInt(4)) {
 		case 0:
-			face = new Face(true, SIMON_FACE_WIDTH, SIMON_FACE_HEIGHT,
-					SIMON_IMAGE, this);
+			face = new Sprite(true, SIMON_FACE_WIDTH, SIMON_FACE_HEIGHT,
+					SIMON_IMAGE, this, POINTS_PER_FACE);
 			break;
 		case 1:
-			face = new Face(true, BUDI_FACE_WIDTH, BUDI_FACE_HEIGHT,
-					BUDI_IMAGE, this);
+			face = new Sprite(true, BUDI_FACE_WIDTH, BUDI_FACE_HEIGHT,
+					BUDI_IMAGE, this, POINTS_PER_FACE);
 			break;
 		case 2:
-			face = new Face(true, EDE_FACE_WIDTH, EDE_FACE_HEIGHT, EDE_IMAGE,
-					this);
+			face = new Sprite(true, EDE_FACE_WIDTH, EDE_FACE_HEIGHT, EDE_IMAGE,
+					this, POINTS_PER_FACE);
 			break;
 		case 3:
-			face = new Face(true, NILS_FACE_WIDTH, NILS_FACE_HEIGHT,
-					NILS_IMAGE, this);
+			face = new Sprite(true, NILS_FACE_WIDTH, NILS_FACE_HEIGHT,
+					NILS_IMAGE, this, POINTS_PER_FACE);
 			break;
 		default:
 			throw new AssertionError();
@@ -275,7 +279,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 	}
 
 	@Override
-	public void onDestroy(Game game, Face face) {
+	public void onDestroy(Game game, Sprite face) {
 		--this.aliveCount;
 		face.setVisible(false);
 		game.scene.removeEntity(4, face);
