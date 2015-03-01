@@ -10,8 +10,9 @@ Controls:
 - Space Bar for Shooting<br>
 - R for Restart/Revive
 
-[Download](rocktastic.jar?raw=true)
-[Download](rocktastic.exe?raw=true)
+[Download (JAR)](rocktastic.jar?raw=true)
+
+[Download (EXE)](rocktastic.exe?raw=true)
 
 ![Current State](preview.jpg "Current State")
 
