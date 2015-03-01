@@ -56,7 +56,7 @@ public class RockTick implements Game.TickListener, Rock.Callback {
 						if (!game.background.getCollisionShape().contains(
 								rock.getX(), rock.getY())) {
 							rock.setVisible(false);
-							game.scene.removeEntity(2, rock);
+							game.scene.removeEntity(Z_INDEX, rock);
 							this.finished = true;
 							--RockTick.this.aliveCount;
 						}
@@ -88,6 +88,7 @@ public class RockTick implements Game.TickListener, Rock.Callback {
 	public void onDestroy(Game game, Rock rock) {
 		game.addPoints(POINTS_PER_ROCK);
 		game.scene.removeEntity(Z_INDEX, rock);
+		--RockTick.this.aliveCount;
 	}
 
 

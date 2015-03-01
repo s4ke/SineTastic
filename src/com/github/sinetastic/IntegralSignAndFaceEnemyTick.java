@@ -20,7 +20,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 
 	private static final Rectangle CONTAINING_BOX = new Rectangle(100, 0,
 			(int) Game.WIDTH - 100, (int) Game.HEIGHT);
-
+	
 	private static final double NILS_FACE_HEIGHT = 50;
 	private static final double NILS_FACE_WIDTH = 35;
 	private static final BufferedImage NILS_IMAGE;
@@ -72,6 +72,8 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 			throw new RuntimeException(e);
 		}
 	}
+	
+	public static final int Z_INDEX = 4;
 
 	private static final int MIN_WIDTH = 15;
 	private static final int MIN_HEIGHT = 30;
@@ -132,20 +134,20 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 							if (sign.isVisible()) {
 								double signToShip = 0;
 								// move the entity
-								double dX = -game.tdT(Math
+								double dX = -game.tdT(Game
 										.sin((this.sinPosX += 0.004))
 										* MAX_SPEED_X);
 								double dY = game.tdT(this.speedY
 										* this.yScale
 										+ this.sinSpeedY
-										* Math.abs(Math
+										* Math.abs(Game
 												.sin(this.sinPosY += 0.01)));
 								if (game.ship.isAlive()) {
 									dY *= signToShip = Math.signum((game.ship
 											.getY() + game.ship.getHeight() / 2)
 											- (sign.getY() + sign.getHeight() / 2));
 								} else {
-									dY *= Math.signum(Math
+									dY *= Math.signum(Game
 											.sin(this.signSin += game.tdT(0.01)));
 								}
 								game.moveAndEnsureInBox(sign, dX, dY,
@@ -172,10 +174,10 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 													}
 													shot = null;
 													shot_.setVisible(false);
-													game.scene.removeEntity(4,
+													game.scene.removeEntity(
+															FxShot.Z_INDEX,
 															shot_);
-													game.moveTick.dequeue
-															.add(shot_);
+													game.moveTick.remove(shot_);
 												}
 
 											});
@@ -185,8 +187,6 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 									// mid of the sign
 									double y = sign.getY() + sign.getHeight()
 											/ 2;
-									// if (sign.getHeight() > game.ship
-									// .getHeight()) {
 									// if the ship is alive shoot in the
 									// direction of it
 									y += signToShip
@@ -194,10 +194,9 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 													.getHeight() / 2)
 													- (sign.getY() + sign
 															.getHeight() / 2));
-									// }
 									shot.setY(y);
-									game.scene.addEntity(4, shot);
-									game.moveTick.enqueue.add(shot);
+									game.scene.addEntity(FxShot.Z_INDEX, shot);
+									game.moveTick.add(shot);
 									this.lastShot = game.currentTick;
 								}
 							} else {
@@ -259,7 +258,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 		game.moveAndEnsureInBox(integralSign,
 				Game.WIDTH - integralSign.getWidth(),
 				game.random.nextInt((int) Game.HEIGHT), CONTAINING_BOX);
-		game.scene.addEntity(4, integralSign);
+		game.scene.addEntity(Z_INDEX, integralSign);
 		++this.aliveCount;
 		return integralSign;
 	}
@@ -268,7 +267,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 	public void onDestroy(Game game, IntegralSign sign) {
 		--this.aliveCount;
 		sign.setVisible(false);
-		game.scene.removeEntity(4, sign);
+		game.scene.removeEntity(Z_INDEX, sign);
 	}
 
 	@Override

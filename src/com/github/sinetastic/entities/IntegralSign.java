@@ -38,7 +38,7 @@ public class IntegralSign extends BaseEntity implements Destructible {
 		// upper part of the sign
 		for (double arc = Math.PI * 1 / 4; arc <= Math.PI; arc += (Math.PI / RESOLUTION)) {
 			double x = Math.cos(arc) * width / 2 + width * 3 / 2;
-			double y = (-1) * (Math.sin(arc) * height / 2) + height / 2;
+			double y = (-1) * (Game.sin(arc) * height / 2) + height / 2;
 			// half the x because width is for the whole sign
 			this.polygon.addPoint((int) x / 2, (int) y);
 			this.paintPolygon.addPoint((int) (x / 2 * PAINT_POLY_SCALE),
@@ -46,7 +46,7 @@ public class IntegralSign extends BaseEntity implements Destructible {
 		}
 		for (double arc = Math.PI; arc >= Math.PI * 1 / 4; arc -= (Math.PI / RESOLUTION)) {
 			double x = (-1) * (Math.cos(arc) * width / 2) + width / 2;
-			double y = Math.sin(arc) * height / 2 + height / 2;
+			double y = Game.sin(arc) * height / 2 + height / 2;
 			// half the x because width is for the whole sign
 			this.polygon.addPoint((int) x / 2, (int) y);
 			this.paintPolygon.addPoint((int) (x / 2 * PAINT_POLY_SCALE),

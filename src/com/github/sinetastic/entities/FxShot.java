@@ -12,6 +12,8 @@ import com.github.sinetastic.Game;
 
 public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 
+	public static final int Z_INDEX = 2;
+
 	public static Stroke DEFAULT_STROKE = new BasicStroke(1.6f,
 			BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
@@ -23,6 +25,15 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 	private double speedX;
 	private double speedY;
 	private final Stroke stroke;
+
+	public FxShot(boolean canCollide, double width, double height,
+			BiFunction<double[], double[], Void> fx, int steps,
+			ShotCallback shotCallback, Stroke stroke, Polygon polygon) {
+		super(canCollide, width, height);
+		this.stroke = stroke;
+		this.shotCallback = shotCallback;
+		this.polygon = polygon;
+	}
 
 	public FxShot(boolean canCollide, double width, double height,
 			BiFunction<double[], double[], Void> fx, int steps,
@@ -38,6 +49,10 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 		this.shotCallback = shotCallback;
 		this.polygon = FxUtil.makeArea(FxUtil.createPolygonFromFunction(fx,
 				steps, width, height, this.tmp, this.tmp2), steps, 0, 1);
+	}
+	
+	public Polygon getPolygon() {
+		return this.polygon;
 	}
 
 	@Override
@@ -110,12 +125,7 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 
 	@Override
 	public void destroy(Game game) {
-		this.setVisible(false);
-		game.scene.removeEntity(2, this);
-		game.moveTick.remove(this);
-		if (this.shotCallback != null) {
-			this.shotCallback.removeShot(this);
-		}
+		this.shotCallback.removeShot(this);
 	}
 
 }

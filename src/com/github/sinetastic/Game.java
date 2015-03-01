@@ -40,6 +40,46 @@ public class Game implements KeyListener {
 		}
 	}
 
+	/**
+	 * FROM libGdx:
+	 * 
+	 * https://github.com/libgdx/libgdx/blob/master/gdx/src/com/badlogic/gdx/
+	 * math/MathUtils.java
+	 */
+	// ---
+	static public final float FLOAT_ROUNDING_ERROR = 0.000001f; // 32 bits
+	static public final float PI = 3.1415927f;
+	static public final float PI2 = PI * 2;
+
+	static public final float E = 2.7182818f;
+
+	static private final int SIN_BITS = 14; // 16KB. Adjust for accuracy.
+	static private final int SIN_MASK = ~(-1 << SIN_BITS);
+	static private final int SIN_COUNT = SIN_MASK + 1;
+
+	static private final float radFull = PI * 2;
+	static private final float degFull = 360;
+	static private final float radToIndex = SIN_COUNT / radFull;
+	static private final float degToIndex = SIN_COUNT / degFull;
+
+	/** multiply by this to convert from radians to degrees */
+	static public final float radiansToDegrees = 180f / PI;
+	static public final float radDeg = radiansToDegrees;
+	/** multiply by this to convert from degrees to radians */
+	static public final float degreesToRadians = PI / 180;
+	static public final float degRad = degreesToRadians;
+
+	static private class Sin {
+		static final float[] table = new float[SIN_COUNT];
+		static {
+			for (int i = 0; i < SIN_COUNT; i++)
+				table[i] = (float) Math.sin((i + 0.5f) / SIN_COUNT * radFull);
+			for (int i = 0; i < 360; i += 90)
+				table[(int) (i * degToIndex) & SIN_MASK] = (float) Math.sin(i
+						* degreesToRadians);
+		}
+	}
+
 	private static final String POINTS_STRING = "Points:  ";
 	private static final String LIVES_TEXT = "Lives:    ";
 	private static final int START_LIVES = 3;
@@ -119,6 +159,10 @@ public class Game implements KeyListener {
 		this.enqueue = new ArrayList<>();
 		this.tickListeners = new HashSet<>();
 	}
+	
+	public static double sin(double radians) {
+		return Sin.table[(int)(radians * radToIndex) & SIN_MASK];
+	}
 
 	public void setup() {
 		this.background = new Background(WIDTH, HEIGHT);
@@ -152,20 +196,21 @@ public class Game implements KeyListener {
 			// this.tickListeners
 			// .add(new BackGroundMoveTick(this.topWall, botWall));
 
-			 this.tickListeners.add(new RockTick(7, 200));
+			this.tickListeners.add(new RockTick(7, 200));
 		}
 
 		this.userShipTick = new UserShipTick();
 		this.tickListeners.add(this.userShotTick = new UserShotTick());
 
 		this.moveTick = new MoveTick();
-		
-//		Sinusal sinusal = new Sinusal(true, 200, 200, this.randomColor(1.0f));
-//		sinusal.setX(200);
-//		sinusal.setY(200);
-//		this.scene.addEntity(3, sinusal);
 
-		this.pointsText =  new Text(Color.BLUE, 20);
+		// Sinusal sinusal = new Sinusal(true, 200, 200,
+		// this.randomColor(1.0f));
+		// sinusal.setX(200);
+		// sinusal.setY(200);
+		// this.scene.addEntity(3, sinusal);
+
+		this.pointsText = new Text(Color.BLUE, 20);
 		this.setPoints(0);
 		this.pointsText.setX(5);
 		this.pointsText.setY(20);
@@ -222,7 +267,7 @@ public class Game implements KeyListener {
 			this.spawnShip();
 		}
 	}
-	
+
 	public long getShipSpawnedTick() {
 		return this.shipSpawnedTick;
 	}
@@ -242,16 +287,16 @@ public class Game implements KeyListener {
 	}
 
 	public void tick() {
-//		if (++this.frames > 10) {
-//			long currentTime = System.nanoTime() / 1000 / 1000;
-//			if (this.lastFpsTime > 0) {
-//				double fps = (((double) this.frames) / (currentTime - this.lastFpsTime)) * 1000;
-//				System.out.println(new StringBuilder().append(fps)
-//						.append(" fps").toString());
-//			}
-//			this.frames = 0;
-//			this.lastFpsTime = currentTime;
-//		}
+		if (++this.frames > 10) {
+			long currentTime = System.nanoTime() / 1000 / 1000;
+			if (this.lastFpsTime > 0) {
+				double fps = (((double) this.frames) / (currentTime - this.lastFpsTime)) * 1000;
+				System.out.println(new StringBuilder().append(fps)
+						.append(" fps").toString());
+			}
+			this.frames = 0;
+			this.lastFpsTime = currentTime;
+		}
 		this.currentTick = System.nanoTime();
 		if (this.lastTick > 0) {
 			// first move everything

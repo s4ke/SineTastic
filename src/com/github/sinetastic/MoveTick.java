@@ -11,8 +11,8 @@ import com.github.sinetastic.entities.MoveableEntity.MoverCallback;
 public class MoveTick implements Game.TickListener, MoverCallback {
 
 	private Set<MoveableEntity> entitiesToMove = new HashSet<>();
-	public List<MoveableEntity> enqueue = new ArrayList<>();
-	public List<MoveableEntity> dequeue = new ArrayList<>();
+	private List<MoveableEntity> enqueue = new ArrayList<>();
+	private List<MoveableEntity> dequeue = new ArrayList<>();
 
 	@Override
 	public void tick(Game game) {
