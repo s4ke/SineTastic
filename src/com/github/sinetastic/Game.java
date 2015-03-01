@@ -53,7 +53,7 @@ public class Game implements KeyListener {
 
 	static public final float E = 2.7182818f;
 
-	static private final int SIN_BITS = 14; // 16KB. Adjust for accuracy.
+	static private final int SIN_BITS = 24; // 16KB. Adjust for accuracy.
 	static private final int SIN_MASK = ~(-1 << SIN_BITS);
 	static private final int SIN_COUNT = SIN_MASK + 1;
 
