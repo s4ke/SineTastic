@@ -11,6 +11,7 @@ Controls:
 - R for Restart/Revive
 
 [Download](rocktastic.jar?raw=true)
+[Download](rocktastic.exe?raw=true)
 
 ![Current State](preview.jpg "Current State")
 
