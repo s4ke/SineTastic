@@ -1,6 +1,7 @@
 package com.github.sinetastic;
 
 import java.awt.Color;
+import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
@@ -28,7 +29,8 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 
 	public long lastShot;
 	private Set<Shot> shots = new HashSet<>();
-	private Set<Shot> removeShots = new HashSet<>();
+	private List<Shot> removeShots = new ArrayList<>();
+	private Polygon polygon;
 
 	@Override
 	public void tick(Game game) {
@@ -41,8 +43,12 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 						game.scene.getChildrenEntities());
 			}
 		}
-		for (Shot shot : this.removeShots) {
-			shot.destroy(game);
+		int size = this.removeShots.size();
+		for (int i = 0; i < size; ++i) {
+			Shot shot = this.removeShots.remove(0);
+			game.moveTick.remove(shot);
+			game.scene.removeEntity(FxShot.Z_INDEX, shot);
+			this.shots.remove(shot);
 		}
 		// trigger a new shot
 		{
@@ -52,7 +58,7 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 			if (game.shotButton && allowedToShoot) {
 				final FxShot shot = this.createShipShot(game);
 				game.enqueue.add(new SoundTick(game.shipShotSound, 500));
-				game.moveTick.enqueue.add(shot);
+				game.moveTick.add(shot);
 				this.lastShot = game.currentTick;
 			}
 		}
@@ -65,21 +71,29 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 
 	@Override
 	public void removeShot(Shot shot) {
-		this.shots.remove((FxShot) shot);
+		this.removeShots.add(shot);
 	}
 
 	private FxShot createShipShot(Game game) {
-		FxShot ret = new FxShot(false, SHOT_WIDTH, SHOT_HEIGHT, (x,
-				position) -> {
-			x[0] = Math.sin(x[0]);
-			return null;
-		}, SHOT_STEPS, this);
+		FxShot ret;
+		if (this.polygon == null) {
+			ret = new FxShot(false, SHOT_WIDTH, SHOT_HEIGHT, (x, position) -> {
+				x[0] = Game.sin(x[0]);
+				return null;
+			}, SHOT_STEPS, this);
+			this.polygon = ret.getPolygon();
+		} else {
+			ret = new FxShot(false, SHOT_WIDTH, SHOT_HEIGHT, (x, position) -> {
+				x[0] = Game.sin(x[0]);
+				return null;
+			}, SHOT_STEPS, this, FxShot.DEFAULT_STROKE, this.polygon);
+		}
 		ret.setColor(SHOT_COLOR);
 		ret.setSpeedX(SHOT_SPEED);
 		ret.setX(game.ship.getX() + game.ship.getWidth());
 		ret.setY(game.ship.getY());
 		ret.setVisible(true);
-		game.scene.addEntity(2, ret);
+		game.scene.addEntity(FxShot.Z_INDEX, ret);
 		this.shots.add(ret);
 		return ret;
 	}
@@ -94,8 +108,7 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 		for (Entity entity : entities) {
 			// only background and we are safe!
 			if (entity != shot && entity != game.background
-					&& !(entity instanceof FxShot)
-					&& !(entity instanceof Ship)) {
+					&& !(entity instanceof FxShot) && !(entity instanceof Ship)) {
 				if (entity.canCollide()) {
 					Rectangle otherRect = new Rectangle(
 							(int) entity.getWidth(), (int) entity.getHeight());

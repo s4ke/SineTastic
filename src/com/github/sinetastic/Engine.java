@@ -107,6 +107,9 @@ public class Engine {
 			UnsupportedAudioFileException {
 		Engine engine = new Engine();
 		engine.show();
+		for(double d = 0; d < Math.PI; d += 0.00001) {
+			Game.sin(d);
+		}
 		engine.cycle();
 	}
 

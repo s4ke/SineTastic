@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Shape;
 
+import com.github.sinetastic.Game;
+
 public class Sinusal extends BaseEntity {
 
 	private final Polygon polygon;
@@ -16,7 +18,7 @@ public class Sinusal extends BaseEntity {
 		double[] tmp2 = new double[1];
 		this.polygon = FxUtil.makeArea(
 				FxUtil.createPolygonFromFunction((x, position) -> {
-					x[0] = Math.sin(position[0]);
+					x[0] = Game.sin(position[0]);
 					return null;
 				}, 150, width, height, tmp, tmp2), 150, 1, 2);
 		this.color = color;
