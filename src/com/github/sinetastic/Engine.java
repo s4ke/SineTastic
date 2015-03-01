@@ -136,7 +136,7 @@ public class Engine {
 		Engine engine = new Engine();
 		engine.show();
 		for (int i = 0; i < 100; ++i) {
-			for (double d = 0; d < Math.PI; d += 0.00001) {
+			for (float d = 0; d < Math.PI; d += 0.00001f) {
 				Game.sin(d);
 			}
 		}

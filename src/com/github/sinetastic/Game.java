@@ -160,7 +160,7 @@ public class Game implements KeyListener {
 		this.tickListeners = new HashSet<>();
 	}
 	
-	public static double sin(double radians) {
+	public static double sin(float radians) {
 		return Sin.table[(int)(radians * radToIndex) & SIN_MASK];
 	}
 

@@ -122,9 +122,9 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 					private long lastShot;
 
 					private boolean finished = false;
-					private double sinPosX;
-					private double sinPosY;
-					private double signSin;
+					private float sinPosX;
+					private float sinPosY;
+					private float signSin;
 					private FxShot shot;
 
 					@Override

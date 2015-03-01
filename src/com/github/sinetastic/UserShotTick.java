@@ -78,13 +78,13 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 		FxShot ret;
 		if (this.polygon == null) {
 			ret = new FxShot(false, SHOT_WIDTH, SHOT_HEIGHT, (x, position) -> {
-				x[0] = Game.sin(x[0]);
+				x[0] = Game.sin((float) x[0]);
 				return null;
 			}, SHOT_STEPS, this);
 			this.polygon = ret.getPolygon();
 		} else {
 			ret = new FxShot(false, SHOT_WIDTH, SHOT_HEIGHT, (x, position) -> {
-				x[0] = Game.sin(x[0]);
+				x[0] = Game.sin((float) x[0]);
 				return null;
 			}, SHOT_STEPS, this, FxShot.DEFAULT_STROKE, this.polygon);
 		}

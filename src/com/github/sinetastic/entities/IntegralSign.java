@@ -12,13 +12,13 @@ import com.github.sinetastic.Game;
 public class IntegralSign extends BaseEntity implements Destructible {
 
 	private static final int POINTS_PER_SIGN = 50;
-	
+
 	private static final double RESOLUTION = 64;
 	private static final double PAINT_POLY_SCALE = 10;
 	private static final Stroke STROKE = new BasicStroke(
 			(int) (2 * PAINT_POLY_SCALE), BasicStroke.CAP_ROUND,
 			BasicStroke.JOIN_MITER);
-	
+
 	private final Color color;
 	private final Polygon polygon;
 	private final Polygon paintPolygon;
@@ -36,15 +36,15 @@ public class IntegralSign extends BaseEntity implements Destructible {
 		this.polygon = new Polygon();
 		this.paintPolygon = new Polygon();
 		// upper part of the sign
-		for (double arc = Math.PI * 1 / 4; arc <= Math.PI; arc += (Math.PI / RESOLUTION)) {
-			double x = Math.cos(arc) * width / 2 + width * 3 / 2;
+		for (float arc = Game.PI * 1 / 4; arc <= Game.PI; arc += (Game.PI / RESOLUTION)) {
+			double x = Game.sin(arc + Game.PI / 2) * width / 2 + width * 3 / 2;
 			double y = (-1) * (Game.sin(arc) * height / 2) + height / 2;
 			// half the x because width is for the whole sign
 			this.polygon.addPoint((int) x / 2, (int) y);
 			this.paintPolygon.addPoint((int) (x / 2 * PAINT_POLY_SCALE),
 					(int) (y * PAINT_POLY_SCALE));
 		}
-		for (double arc = Math.PI; arc >= Math.PI * 1 / 4; arc -= (Math.PI / RESOLUTION)) {
+		for (float arc = Game.PI; arc >= Game.PI * 1 / 4; arc -= (Game.PI / RESOLUTION)) {
 			double x = (-1) * (Math.cos(arc) * width / 2) + width / 2;
 			double y = Game.sin(arc) * height / 2 + height / 2;
 			// half the x because width is for the whole sign
