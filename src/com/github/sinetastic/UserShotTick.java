@@ -24,8 +24,8 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 	private static final int SHOT_STEPS = 42;
 	private static final Color SHOT_COLOR = new Color(0, 0x99, 0);
 
-	private static final int MAX_DELAY = 1000 * 1000 * 300;
-	private static final int MIN_DELAY = 1000 * 1000 * 100;
+	private static final int MAX_DELAY = 300;
+	private static final int MIN_DELAY = 100;
 
 	public long lastShot;
 	private Set<Shot> shots = new HashSet<>();
@@ -54,7 +54,7 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 		{
 			boolean allowedToShoot = game.ship.isAlive()
 					&& (((game.currentTick - this.lastShot) > MAX_DELAY) || (this.shots
-							.size() == 0 && ((game.currentTick - this.lastShot) > MIN_DELAY)));
+							.size() == 0 && game.diff(this.lastShot) > MIN_DELAY));
 			if (game.shotButton && allowedToShoot) {
 				final FxShot shot = this.createShipShot(game);
 				game.enqueue.add(new SoundTick(game.shipShotSound, 500));

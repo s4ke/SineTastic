@@ -19,7 +19,11 @@ public class Engine {
 	private final ScaleScene scene;
 	private final Thread logicThread;
 
-	private static final int TIME_BETWEEN_FRAMES_MS = 5;
+	public long frames = 0;
+	public long lastFpsTime = 0;
+
+	private static final int TIME_BETWEEN_TICKS_MS = 10;
+	private static final int TIME_BETWEEN_REPAINTS_MS = 10;
 
 	public Engine() throws MidiUnavailableException, LineUnavailableException,
 			IOException, UnsupportedAudioFileException {
@@ -66,22 +70,21 @@ public class Engine {
 		this.frame.addKeyListener(this.game);
 		this.logicThread = new Thread(new Runnable() {
 
-			private long previousDraw;
-			private long currentDraw = System.nanoTime() / 1000 / 1000;
+			private long previousTick;
+			private long currentTick = System.currentTimeMillis();
 
 			@Override
 			public void run() {
 				while (true) {
 					Engine.this.game.tick();
-					Engine.this.frame.repaint();
-					this.previousDraw = this.currentDraw;
-					this.currentDraw = System.nanoTime() / 1000 / 1000;
-					long timeSpanSinceLastFrame = this.currentDraw
-							- this.previousDraw;
-					if (timeSpanSinceLastFrame < TIME_BETWEEN_FRAMES_MS) {
+					this.previousTick = this.currentTick;
+					this.currentTick = System.currentTimeMillis();
+					long timeSpanSinceLastTick = this.currentTick
+							- this.previousTick;
+					if (timeSpanSinceLastTick < TIME_BETWEEN_TICKS_MS) {
 						try {
-							Thread.sleep(TIME_BETWEEN_FRAMES_MS
-									- timeSpanSinceLastFrame);
+							Thread.sleep(TIME_BETWEEN_TICKS_MS
+									- timeSpanSinceLastTick);
 						} catch (InterruptedException e) {
 							throw new RuntimeException(e);
 						}
@@ -100,6 +103,31 @@ public class Engine {
 
 	public void cycle() {
 		this.logicThread.start();
+		long currentRepaint = 0;
+		long previousRepaint = 0;
+		while (true) {
+			if (++this.frames > 200) {
+				long currentTime = System.nanoTime() / 1000 / 1000 / 1000;
+				if (this.lastFpsTime > 0) {
+					double fps = (((double) this.frames) / (currentTime - this.lastFpsTime));
+					System.out.println(new StringBuilder().append(fps)
+							.append(" fps").toString());
+				}
+				this.frames = 0;
+				this.lastFpsTime = currentTime;
+			}
+			Engine.this.frame.repaint();
+			previousRepaint = currentRepaint;
+			currentRepaint = System.currentTimeMillis();
+			long timeSpanSinceLastFrame = currentRepaint - previousRepaint;
+			if (timeSpanSinceLastFrame < TIME_BETWEEN_REPAINTS_MS) {
+				try {
+					Thread.sleep(TIME_BETWEEN_REPAINTS_MS - timeSpanSinceLastFrame);
+				} catch (InterruptedException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) throws MidiUnavailableException,

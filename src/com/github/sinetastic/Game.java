@@ -112,7 +112,6 @@ public class Game implements KeyListener {
 	public long lastTick;
 	public long currentTick;
 	private long shipSpawnedTick;
-	public long frames = 0;
 	public long lastFpsTime;
 	private final Set<TickListener> tickListeners;
 	public final Random random;
@@ -287,17 +286,7 @@ public class Game implements KeyListener {
 	}
 
 	public void tick() {
-		if (++this.frames > 10) {
-			long currentTime = System.nanoTime() / 1000 / 1000;
-			if (this.lastFpsTime > 0) {
-				double fps = (((double) this.frames) / (currentTime - this.lastFpsTime)) * 1000;
-				System.out.println(new StringBuilder().append(fps)
-						.append(" fps").toString());
-			}
-			this.frames = 0;
-			this.lastFpsTime = currentTime;
-		}
-		this.currentTick = System.nanoTime();
+		this.currentTick = System.currentTimeMillis();
 		if (this.lastTick > 0) {
 			// first move everything
 			this.moveTick.tick(this);
@@ -328,12 +317,12 @@ public class Game implements KeyListener {
 	}
 
 	public double tdT(double value) {
-		double dT = (this.currentTick - this.lastTick) / 1000 / 1000;
+		double dT = (this.currentTick - this.lastTick);
 		return value * dT;
 	}
 
 	public long diff(long time) {
-		return (this.currentTick - time) / 1000 / 1000;
+		return (this.currentTick - time);
 	}
 
 	public void moveAndEnsureInScene(Entity entity, double dX, double dY) {

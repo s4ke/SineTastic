@@ -20,7 +20,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 
 	private static final Rectangle CONTAINING_BOX = new Rectangle(100, 0,
 			(int) Game.WIDTH - 100, (int) Game.HEIGHT);
-	
+
 	private static final double NILS_FACE_HEIGHT = 50;
 	private static final double NILS_FACE_WIDTH = 35;
 	private static final BufferedImage NILS_IMAGE;
@@ -72,13 +72,13 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public static final int Z_INDEX = 4;
 
 	private static final int MIN_WIDTH = 15;
 	private static final int MIN_HEIGHT = 30;
 
-	private static final double MAX_SPEED_X = 0.3;
+	private static final double MAX_SPEED_X = 0.25;
 	private static final double MIN_SPEED_Y = 0.09;
 	private static final double VAR_SPEED_Y = 0.05;
 
@@ -133,22 +133,33 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 						{
 							if (sign.isVisible()) {
 								double signToShip = 0;
+								double differenceBetweenMids = Math
+										.abs((game.ship.getY() + game.ship
+												.getHeight() / 2)
+												- (sign.getY() + sign
+														.getHeight() / 2));
 								// move the entity
-								double dX = -game.tdT(Game
-										.sin((this.sinPosX += 0.004))
-										* MAX_SPEED_X);
-								double dY = game.tdT(this.speedY
+								double dX = -Game.sin((this.sinPosX += game
+										.tdT(0.0015))) * MAX_SPEED_X;
+								double dY = this.speedY
 										* this.yScale
 										+ this.sinSpeedY
 										* Math.abs(Game
-												.sin(this.sinPosY += 0.01)));
+												.sin(this.sinPosY += game
+														.tdT((0.005))));
 								if (game.ship.isAlive()) {
 									dY *= signToShip = Math.signum((game.ship
 											.getY() + game.ship.getHeight() / 2)
 											- (sign.getY() + sign.getHeight() / 2));
 								} else {
 									dY *= Math.signum(Game
-											.sin(this.signSin += game.tdT(0.01)));
+											.sin(this.signSin += game
+													.tdT(0.005)));
+								}
+								dX = game.tdT(dX);
+								dY = game.tdT(dY);
+								if (game.ship.isAlive() && Math.abs(dY) > differenceBetweenMids) {
+									dY = signToShip * differenceBetweenMids;
 								}
 								game.moveAndEnsureInBox(sign, dX, dY,
 										CONTAINING_BOX);
@@ -189,11 +200,7 @@ public class IntegralSignAndFaceEnemyTick implements Game.TickListener,
 											/ 2;
 									// if the ship is alive shoot in the
 									// direction of it
-									y += signToShip
-											* Math.abs((game.ship.getY() + game.ship
-													.getHeight() / 2)
-													- (sign.getY() + sign
-															.getHeight() / 2));
+									y += signToShip * differenceBetweenMids;
 									shot.setY(y);
 									game.scene.addEntity(FxShot.Z_INDEX, shot);
 									game.moveTick.add(shot);
