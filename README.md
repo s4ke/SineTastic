@@ -12,3 +12,8 @@ Controls:
 
 ![Current State](preview.jpg "Current State")
 
+# TODO:
+
+- Neue Gegnertypen
+- Ideen aus der Community?
+
