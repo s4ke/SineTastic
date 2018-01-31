@@ -174,12 +174,14 @@ public class Game implements KeyListener {
 	}
 
 	public void setFxVolume(float volume) {
-		fxSounds.forEach( clip -> {
-			FloatControl control = (FloatControl) clip.getControl( FloatControl.Type.MASTER_GAIN );
-			float range = control.getMaximum() - control.getMinimum();
-			float gain = (range * volume) + control.getMinimum();
-			control.setValue( gain );
-		} );
+		fxSounds.forEach( clip -> setVolume( clip, volume ) );
+	}
+
+	private static void setVolume(Clip clip, float volume) {
+		FloatControl control = (FloatControl) clip.getControl( FloatControl.Type.MASTER_GAIN );
+		float range = control.getMaximum() - control.getMinimum();
+		float gain = (range * volume) + control.getMinimum();
+		control.setValue( gain );
 	}
 
 	public static double sin(double radians) {
