@@ -1,6 +1,7 @@
 package com.github.sinetastic.entities;
 
 import java.awt.Polygon;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public class FxUtil {
@@ -10,14 +11,14 @@ public class FxUtil {
 	}
 
 	public static Polygon createPolygonFromFunction(
-			BiFunction<double[], double[], Void> fx, int steps, double width,
+			BiConsumer<double[], double[]> fx, int steps, double width,
 			double height, double[] tmp, double tmp2[]) {
 		Polygon polygon = new Polygon();
 		double dX = width / steps;
 		for (int i = 0; i < steps; ++i) {
 			tmp[0] = i;
 			tmp2[0] = dX * i;
-			fx.apply(tmp, tmp2);
+			fx.accept(tmp, tmp2);
 			double val = tmp[0] * height / 2;
 			polygon.addPoint((int) (dX * i), (int) (height / 2 - val));
 		}

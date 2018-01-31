@@ -8,7 +8,7 @@ import java.io.IOException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import com.github.sinetastic.scene.ScaleScene;
 
@@ -21,10 +21,10 @@ public class Engine {
 	
 	private static final int TIME_BETWEEN_FRAMES_MS = 5;
 
-	public Engine() throws MidiUnavailableException, LineUnavailableException,
+	private Engine() throws MidiUnavailableException, LineUnavailableException,
 			IOException, UnsupportedAudioFileException {
 		this.frame = new JFrame();
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
 		this.frame.setLocationRelativeTo(null);
 
 		this.scene = new ScaleScene(6);
@@ -107,6 +107,7 @@ public class Engine {
 			UnsupportedAudioFileException {
 		Engine engine = new Engine();
 		engine.show();
+		// pre-warm
 		for (int i = 0; i < 100; ++i) {
 			for (double d = 0; d < Math.PI; d += 0.00001) {
 				Game.sin(d);

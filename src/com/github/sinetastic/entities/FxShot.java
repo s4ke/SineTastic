@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 import com.github.sinetastic.Game;
@@ -27,8 +28,8 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 	private final Stroke stroke;
 
 	public FxShot(boolean canCollide, double width, double height,
-			BiFunction<double[], double[], Void> fx, int steps,
-			ShotCallback shotCallback, Stroke stroke, Polygon polygon) {
+				  BiConsumer<double[], double[]> fx, int steps,
+				  ShotCallback shotCallback, Stroke stroke, Polygon polygon) {
 		super(canCollide, width, height);
 		this.stroke = stroke;
 		this.shotCallback = shotCallback;
@@ -36,13 +37,13 @@ public class FxShot extends BaseEntity implements MoveableEntity, Shot {
 	}
 
 	public FxShot(boolean canCollide, double width, double height,
-			BiFunction<double[], double[], Void> fx, int steps,
+			BiConsumer<double[], double[]> fx, int steps,
 			ShotCallback shotCallback) {
 		this(canCollide, width, height, fx, steps, shotCallback, DEFAULT_STROKE);
 	}
 
 	public FxShot(boolean canCollide, double width, double height,
-			BiFunction<double[], double[], Void> fx, int steps,
+			BiConsumer<double[], double[]> fx, int steps,
 			ShotCallback shotCallback, Stroke stroke) {
 		super(canCollide, width, height);
 		this.stroke = stroke;
