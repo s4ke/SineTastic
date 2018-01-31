@@ -164,8 +164,7 @@ public class Game implements KeyListener {
 	private Clip loadSound(String path) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
 		Clip clip = AudioSystem.getClip();
 		BufferedInputStream bis = new BufferedInputStream(
-				Game.class
-						.getResourceAsStream( path ) );
+				Game.class.getResourceAsStream( path ) );
 		clip.open( AudioSystem.getAudioInputStream( bis ) );
 		return clip;
 	}
