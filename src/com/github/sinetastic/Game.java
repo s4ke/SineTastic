@@ -124,9 +124,9 @@ public class Game implements KeyListener {
 	private long shipSpawnedTick;
 	public long frames = 0;
 	public long lastFpsTime;
-	private final Set<TickListener> tickListeners;
+	private final Set<TickListener> tickListeners = new HashSet<>();
 	public final Random random;
-	public final List<TickListener> enqueue;
+	public final List<TickListener> enqueue = new ArrayList<>();
 	public UserShotTick userShotTick;
 	private UserShipTick userShipTick;
 	private int lives;
@@ -137,11 +137,11 @@ public class Game implements KeyListener {
 	// This is special!
 	public MoveTick moveTick;
 
-	public static interface TickListener {
+	public interface TickListener {
 
-		public void tick(Game game);
+		void tick(Game game);
 
-		public boolean isFinished();
+		boolean isFinished();
 
 	}
 
@@ -149,32 +149,25 @@ public class Game implements KeyListener {
 			LineUnavailableException, IOException,
 			UnsupportedAudioFileException {
 
-		{
-			this.shipShotSound = AudioSystem.getClip();
-			BufferedInputStream bis = new BufferedInputStream(
-					Game.class
-							.getResourceAsStream( "/com/github/sinetastic/assets/blazer.wav" ) );
-			this.shipShotSound.open( AudioSystem.getAudioInputStream( bis ) );
-			this.fxSounds.add( this.shipShotSound );
-		}
+		this.fxSounds.add( this.shipShotSound = loadSound( "/com/github/sinetastic/assets/blazer.wav" ) );
+		this.fxSounds.add( this.shipExplodeSound = loadSound( "/com/github/sinetastic/assets/ship_explode.wav" ) );
 
-		{
-			this.shipExplodeSound = AudioSystem.getClip();
-			BufferedInputStream bis = new BufferedInputStream(
-					Game.class
-							.getResourceAsStream( "/com/github/sinetastic/assets/ship_explode.wav" ) );
-			this.shipExplodeSound.open( AudioSystem.getAudioInputStream( bis ) );
-			this.fxSounds.add( this.shipExplodeSound );
-		}
 		this.setFxVolume( this.fxVolume );
 		this.scene = scene;
 		this.random = new Random();
-		this.enqueue = new ArrayList<>();
-		this.tickListeners = new HashSet<>();
 	}
 
 	public void setFxVolume(float volume) {
 		fxSounds.forEach( clip -> setVolume( clip, volume ) );
+	}
+
+	private Clip loadSound(String path) throws LineUnavailableException, IOException, UnsupportedAudioFileException {
+		Clip clip = AudioSystem.getClip();
+		BufferedInputStream bis = new BufferedInputStream(
+				Game.class
+						.getResourceAsStream( path ) );
+		clip.open( AudioSystem.getAudioInputStream( bis ) );
+		return clip;
 	}
 
 	private static void setVolume(Clip clip, float volume) {
