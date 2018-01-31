@@ -93,6 +93,8 @@ public class Game implements KeyListener {
 	private static final double SHIP_WIDTH = 18;
 	private static final double SHIP_HEIGHT = 18;
 
+	public float fxVolume = 0.4f;
+
 	public boolean up;
 	public boolean down;
 	public boolean left;
@@ -227,7 +229,7 @@ public class Game implements KeyListener {
 		if (this.ship.isAlive()) {
 			this.ship.explode();
 			this.addLives(-1);
-			this.enqueue.add(new SoundTick(this.shipExplodeSound, 1000));
+			this.enqueue.add(new SoundTick(this.shipExplodeSound, 1000, this.fxVolume));
 		}
 	}
 

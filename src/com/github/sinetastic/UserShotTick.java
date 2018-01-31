@@ -56,7 +56,7 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 					.size() == 0 && ((game.currentTick - this.lastShot) > MIN_DELAY)));
 			if ( game.shotButton && allowedToShoot ) {
 				final FxShot shot = this.createShipShot( game );
-				game.enqueue.add( new SoundTick( game.shipShotSound, 500 ) );
+				game.enqueue.add( new SoundTick( game.shipShotSound, 500, game.fxVolume ) );
 				game.moveTick.add( shot );
 				this.lastShot = game.currentTick;
 			}
@@ -151,8 +151,8 @@ public class UserShotTick implements Game.TickListener, ShotTick {
 			}
 		}
 		for ( Destructible entity : toRemove ) {
-			if ( entity instanceof Destructible ) {
-				((Destructible) entity).hit( game, this, 1 );
+			if ( entity != null ) {
+				entity.hit( game, this, 1 );
 			}
 		}
 	}
