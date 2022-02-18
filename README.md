@@ -12,6 +12,8 @@ Because of that I was able to finish the game using the simplest concepts I coul
 
 And I am to this day still happy with the results.Is the code pretty? Hell no. Can it be improved? Sure as hell. Does it bug me? Nope. It works just fine, just the code is a bit messy. But I have a working game ;)
 
+https://www.cyclic.sh/posts/write-shitty-code
+
 Controls:
 
 - Arrow Keys for Movement<br>
